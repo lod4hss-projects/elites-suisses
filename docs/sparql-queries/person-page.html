@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>SPARQL Triples (JSON)</title>
+  <style>
+        body {
+            background-color: rgb(226, 231, 235);
+            font-family:  Geneva, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
+        }
+
+        h1 {
+            color: rgb(22, 60, 109);
+            font-family: Helvetica, sans-serif;
+        }
+        h2 {
+            color: rgb(34, 108, 205);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+    .entity-header {
+      margin-bottom: 20px;
+    }
+
+    .entity-header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .entity-header small {
+      font-size: 0.9rem;
+      color: #666;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      display: block;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      position: sticky;
+      top: 0;
+    }
+
+    .pagination {
+      margin: 20px 0;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+
+    .pagination button:hover {
+      background: #e9e9e9;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        margin: 10px;
+        font-size: 0.9rem;
+      }
+
+      .entity-header h1 {
+        font-size: 1.2rem;
+      }
+
+      th, td {
+        padding: 6px;
+        font-size: 0.85rem;
+      }
+
+      .pagination button {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+    }
+
+  </style>
+</head>
+<body>
+  <div class="entity-header" id="entity-header"></div>
+  <div id="table-container"></div>
+  <div class="pagination" id="pagination"></div>
+
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const uri = urlParams.get('uri');
+    
+
+    if (!uri) {
+      document.body.innerHTML = '<p>Error: Missing ?uri parameter.</p>';
+      throw new Error('Missing ?uri parameter');
+    }
+
+    const pageSize = 10;
+    let currentPage = 1;
+    let entityName = 'Unknown Entity';
+    let entityClass = 'Unknown Class';
+
+    async function fetchEntityInfo() {
+      const query = `
+        SELECT ?name ?class ?birthYear WHERE {
+          <${uri}> <http://elites_suisses/ontology/nameForename> ?name .
+          OPTIONAL { <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class }
+          OPTIONAL { <${uri}> <http://elites_suisses/ontology/birthYear> ?birthYear }            
+        }
+        LIMIT 1
+      `;
+
+      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/sparql-query',
+          'Accept': 'application/sparql-results+json'
+        },
+        body: query
+      });
+
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Entity info error: ${response.status} ${response.statusText}\n${text}`);
+      }
+
+      const data = await response.json();
+      const bindings = data.results.bindings;
+
+      if (bindings.length > 0) {
+        entityName = bindings[0].name?.value || entityName;
+        entityClass = bindings[0].class?.value || entityClass;
+        entityBirthYear = bindings[0].birthYear?.value && bindings[0].birthYear.value !== "0" ? `(${bindings[0].birthYear.value})` : '';
+    }
+
+      document.getElementById('entity-header').innerHTML = `
+        <h1>${entityName} <smaller>${entityBirthYear}</smaller></h1>
+
+        <p style="font-size:smaller">Instance of: ${entityClass}</p>
+      `;
+    }
+
+    async function fetchTriples(page) {
+      const offset = (page - 1) * pageSize;
+      const query = `
+        SELECT ?p ?o WHERE {
+          BIND (<${uri}> AS ?s)
+          ?s ?p ?o
+          FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
+        }
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+
+      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/sparql-query',
+          'Accept': 'application/sparql-results+json'
+        },
+        body: query
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`SPARQL error: ${response.status} ${response.statusText}\n${text}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.results || !data.results.bindings) {
+        throw new Error('Invalid SPARQL JSON response');
+      }
+
+      return data.results.bindings.map(binding => ({
+        p: binding.p?.value || '',
+        o: binding.o?.value || ''
+      }));
+    }
+
+    function getPredicateLabel(uri) {
+      if (!uri) return uri;
+      const lastHash = uri.lastIndexOf('#');
+      const lastSlash = uri.lastIndexOf('/');
+      const pos = Math.max(lastHash, lastSlash);
+      return pos > 0 ? uri.substring(pos + 1) : uri;
+    }
+
+    function renderTable(triples) {
+      const container = document.getElementById('table-container');
+      let html = `
+        <table>
+          <thead>
+            <tr><th>Predicate</th><th>Object</th></tr>
+          </thead>
+          <tbody>
+      `;
+      triples.forEach(triple => {
+        let objectDisplay = triple.o;
+
+        // If object is a URL (starts with http)
+        if (triple.o.startsWith('http')) {
+          let href = triple.o;
+          // If it's an internal resource, link to person-page.html
+          if (triple.o.startsWith('http://elites_suisses/resource/')) {
+            href = `./person-page.html?uri=${encodeURIComponent(triple.o)}`;
+          }
+          objectDisplay = `<a href="${href}" target="_blank">${triple.o}</a>`;
+        }
+
+         // Format predicate as link with short label
+        const predLabel = getPredicateLabel(triple.p);
+        const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
+
+
+        html += `
+          <tr>
+             <td>${predLink}</td>
+            <td>${objectDisplay}</td>
+          </tr>
+        `;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    function renderPagination(hasMore) {
+      const pagination = document.getElementById('pagination');
+      let html = '';
+
+      if (currentPage > 1) {
+        html += '<button onclick="goToPage(1)">First</button>';
+        html += `<button onclick="goToPage(${currentPage - 1})">Previous</button>`;
+      }
+
+      if (hasMore) {
+        html += `<button onclick="goToPage(${currentPage + 1})">Next</button>`;
+      }
+
+      pagination.innerHTML = html;
+    }
+
+    async function goToPage(page) {
+      currentPage = page;
+      try {
+        const triples = await fetchTriples(page);
+        renderTable(triples);
+        renderPagination(triples.length === pageSize);
+      } catch (err) {
+        document.getElementById('table-container').innerHTML =
+          `<p style="color:red;">Error: ${err.message}</p>`;
+        document.getElementById('pagination').innerHTML = '';
+      }
+    }
+
+    // Load entity info first, then triples
+    (async () => {
+      await fetchEntityInfo();
+      goToPage(1);
+    })();
+  </script>
+</body>
+</html>

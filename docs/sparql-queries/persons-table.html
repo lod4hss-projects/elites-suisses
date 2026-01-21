@@ -2,10 +2,14 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persons</title>
   <style>
         body {
             background-color: rgb(226, 231, 235);
+            font-family: Helvetica, sans-serif;
+            margin: 20px;
+            line-height: 1.6;
         }
 
         h1 {
@@ -17,11 +21,90 @@
             font-family: Arial, Helvetica, sans-serif;
         }
 
+    .entity-header {
+      margin-bottom: 20px;
+    }
+
+    .entity-header h1 {
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .entity-header small {
+      font-size: 0.9rem;
+      color: rgb(113, 144, 144);
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      max-width: 100%;
+      overflow-x: auto;
+      display: block;
+    }
+
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px;
+      text-align: left;
+      word-break: break-word;
+      font-size: 0.9rem;
+    }
+
+    th {
+      background-color: #f2f2f2;
+      position: sticky;
+      top: 0;
+    }
+
+    .pagination {
+      margin: 20px 0;
+      text-align: center;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .pagination button {
+      padding: 6px 12px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border: 1px solid #ccc;
+      background: #f9f9f9;
+      border-radius: 4px;
+    }
+
+    .pagination button:hover {
+      background: #e9e9e9;
+    }
+
+    @media (max-width: 600px) {
+      body {
+        margin: 10px;
+        font-size: 0.9rem;
+      }
+
+      .entity-header h1 {
+        font-size: 1.2rem;
+      }
+
+      th, td {
+        padding: 6px;
+        font-size: 0.85rem;
+      }
+
+      .pagination button {
+        padding: 4px 8px;
+        font-size: 0.8rem;
+      }
+    }
+
     </style>
 </head>
 <body>
   <div>
-    <h1>Swiss Elites — Person List</h1>
+    <h1>Swiss Elites — Persons</h1>
     <input type="text" id="searchInput" value="Moritz">
     <div id="tableContainer">Loading data...</div>
     <div class="pagination" id="pagination"></div>
@@ -40,14 +123,14 @@
     const paginationContainer = document.getElementById('pagination');
 
     async function fetchData(searchTerm = '') {
-      const filterClause = searchTerm ? `FILTER(CONTAINS(?name, "${searchTerm}"))` : '';
+      const filterClause = searchTerm ? `FILTER(CONTAINS(LCASE(?name), LCASE("${searchTerm}")))` : '';
       const query = `
         prefix owl: <http://www.w3.org/2002/07/owl#>
         prefix esr: <http://elites_suisses/resource/>
         prefix eso: <http://elites_suisses/ontology/>
         prefix xsd: <http://www.w3.org/2001/XMLSchema#>
 
-        select ?name ?birthYear ?url
+        select ?s ?name ?birthYear ?url
         where {
             ?s a eso:Person;
                eso:nameForename ?name;
@@ -68,6 +151,7 @@
         });
         const data = await response.json();
         allData = data.results.bindings.map(row => ({
+          uri: row.s?.value || '#',
           name: row.name?.value || 'N/A',
           birthYear: row.birthYear?.value || 'N/A',
           url: row.url?.value || '#'
@@ -90,9 +174,10 @@
         return;
       }
 
-      let tableHTML = `<table><thead><tr><th>Forename</th><th>Birth Year</th><th>Profile</th></tr></thead><tbody>`;
+      let tableHTML = `<br/>
+      <table><thead><tr><th>Forename</th><th>Birth Year</th><th>Profile</th></tr></thead><tbody>`;
       pageData.forEach(row => {
-        tableHTML += `<tr><td>${escapeHtml(row.name)}</td><td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(row.url)}" target="_blank">View</a></td></tr>`;
+        tableHTML += `<tr><td><a href="./person-page.html?uri=${escapeHtml(row.uri)}" target="_blank">${escapeHtml(row.name)}</a></td><td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(row.url)}" target="_blank">View</a></td></tr>`;
       });
       tableHTML += `</tbody></table>`;
       tableContainer.innerHTML = tableHTML;
