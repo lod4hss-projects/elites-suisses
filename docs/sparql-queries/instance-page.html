@@ -3,15 +3,40 @@
 <head>
   <title>SPARQL Triples (JSON)</title>
   <link rel="stylesheet" href="../base_style.css">
+  <style>
+    #tables-container {
+        display: flex;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      #outgoing-section, #incoming-section {
+        flex: 1;
+        min-width: 100px;
+      }
+  </style>
 </head>
 <body>
   <div class="entity-header" id="entity-header"></div>
-  <div id="table-container"></div>
+  <div id="tables-container">
+    <div id="outoing-section">
+      <h3>Instance Properties</h3>
+      <div id="outgoing-table"></div>
+      <div class="pagination" id="pagination-outgoing"></div>
+    </div>
+    <div id="incoming-section">
+      <h3>Incoming Properties</h3>
+      <div id="incoming-table"></div>
+      <div class="pagination" id="pagination-incoming"></div>
+    </div>
+  </div>
   <div class="pagination" id="pagination"></div>
 
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const uri = urlParams.get('uri');
+    const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+
     
 
     if (!uri) {
@@ -33,8 +58,6 @@
         }
         LIMIT 1
       `;
-
-      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -63,11 +86,11 @@
       document.getElementById('entity-header').innerHTML = `
         <h1>${entityName} <smaller>${entityBirthYear}</smaller></h1>
 
-        <p style="font-size:smaller">Instance of: ${entityClass}</p>
+        <p style="font-size:smaller">Instance of class: ${entityClass}</p>
       `;
     }
 
-    async function fetchTriples(page) {
+    async function fetchOutgoingTriples(page) {
       const offset = (page - 1) * pageSize;
       const query = `
         SELECT ?p ?o ?oName WHERE {
@@ -80,7 +103,6 @@
         OFFSET ${offset}
       `;
 
-      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
 
       const response = await fetch(endpoint, {
         method: 'POST',
@@ -109,6 +131,48 @@
       }));
     }
 
+    async function fetchIncomingTriples(page) {
+      const offset = (page - 1) * pageSize;
+      const query = `
+        SELECT ?s ?p ?sName WHERE {
+          BIND (<${uri}> AS ?o)
+          ?s ?p ?o.
+          OPTIONAL {?s <https://sdhss.org/ontology/shortcuts/P9> ?sName}
+          FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
+        }
+        LIMIT ${pageSize}
+        OFFSET ${offset}
+      `;
+
+      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+
+      const response = await fetch(endpoint, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/sparql-query',
+          'Accept': 'application/sparql-results+json'
+        },
+        body: query
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`SPARQL error (incoming): ${response.status} ${response.statusText}\n${text}`);
+      }
+
+      const data = await response.json();
+
+      if (!data.results || !data.results.bindings) {
+        throw new Error('Invalid SPARQL JSON response (incoming)');
+      }
+
+      return data.results.bindings.map(binding => ({
+        s: binding.s?.value || '',
+        p: binding.p?.value || '',
+        sName: binding.sName?.value || ''
+      }));
+}
+
     function getPredicateLabel(uri) {
       if (!uri) return uri;
       const lastHash = uri.lastIndexOf('#');
@@ -117,8 +181,8 @@
       return pos > 0 ? uri.substring(pos + 1) : uri;
     }
 
-    function renderTable(triples) {
-      const container = document.getElementById('table-container');
+    function renderOutgoingTable(triples) {
+      const container = document.getElementById('outgoing-table');
       let html = `
         <table>
           <thead>
@@ -157,40 +221,119 @@
       container.innerHTML = html;
     }
 
-    function renderPagination(hasMore) {
-      const pagination = document.getElementById('pagination');
+
+    function renderIncomingTable(triples) {
+      const container = document.getElementById('incoming-table');
+      let html = `
+        <table>
+          <thead>
+            <tr><th>Subject</th><th>Predicate</th></tr>
+          </thead>
+          <tbody>
+      `;
+      triples.forEach(triple => {
+        let subjectDisplay = triple.s;
+
+        // If subject is a URL (starts with http)
+        if (triple.s.startsWith('http')) {
+          let href = triple.s;
+          // If it's an internal resource, link to person-page.html
+          if (triple.s.startsWith('http://elites_suisses/resource/')) {
+            href = `./instance-page.html?uri=${encodeURIComponent(triple.s)}`;
+          }
+          
+          const sLabel = triple.sName.length > 0 ? triple.sName : triple.s; 
+          subjectDisplay = `<a href="${href}">${sLabel}</a>`;
+        }
+
+        // Format predicate as link with short label
+        const predLabel = getPredicateLabel(triple.p);
+        const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
+
+        html += `
+          <tr>
+            <td>${subjectDisplay}</td>
+            <td>${predLink}</td>
+          </tr>
+        `;
+      });
+      html += '</tbody></table>';
+      container.innerHTML = html;
+    }
+
+    // --- Separate Pagination State ---
+    let currentPageOutgoing = 1;
+    let currentPageIncoming = 1;
+
+    // --- Render Pagination for Outgoing ---
+    function renderPaginationOutgoing(hasMore) {
+      const pagination = document.getElementById('pagination-outgoing');
       let html = '';
 
-      if (currentPage > 1) {
-        html += '<button onclick="goToPage(1)">First</button>';
-        html += `<button onclick="goToPage(${currentPage - 1})">Previous</button>`;
+      if (currentPageOutgoing > 1) {
+        html += '<button onclick="goToPageOutgoing(1)">First</button>';
+        html += `<button onclick="goToPageOutgoing(${currentPageOutgoing - 1})">Previous</button>`;
       }
 
       if (hasMore) {
-        html += `<button onclick="goToPage(${currentPage + 1})">Next</button>`;
+        html += `<button onclick="goToPageOutgoing(${currentPageOutgoing + 1})">Next</button>`;
       }
 
       pagination.innerHTML = html;
     }
 
-    async function goToPage(page) {
-      currentPage = page;
+    // --- Render Pagination for Incoming ---
+    function renderPaginationIncoming(hasMore) {
+      const pagination = document.getElementById('pagination-incoming');
+      let html = '';
+
+      if (currentPageIncoming > 1) {
+        html += '<button onclick="goToPageIncoming(1)">First</button>';
+        html += `<button onclick="goToPageIncoming(${currentPageIncoming - 1})">Previous</button>`;
+      }
+
+      if (hasMore) {
+        html += `<button onclick="goToPageIncoming(${currentPageIncoming + 1})">Next</button>`;
+      }
+
+      pagination.innerHTML = html;
+    }
+
+    // --- Go to Page for Outgoing ---
+    async function goToPageOutgoing(page) {
+      currentPageOutgoing = page;
       try {
-        const triples = await fetchTriples(page);
-        renderTable(triples);
-        renderPagination(triples.length === pageSize);
+        const triples = await fetchOutgoingTriples(page, 'outgoing'); // or your existing fetchTriples()
+        renderOutgoingTable(triples, 'outgoing-table');
+        renderPaginationOutgoing(triples.length === pageSize);
       } catch (err) {
-        document.getElementById('table-container').innerHTML =
+        document.getElementById('outgoing-table').innerHTML =
           `<p style="color:red;">Error: ${err.message}</p>`;
-        document.getElementById('pagination').innerHTML = '';
+        document.getElementById('pagination-outgoing').innerHTML = '';
       }
     }
 
-    // Load entity info first, then triples
+    // --- Go to Page for Incoming ---
+    async function goToPageIncoming(page) {
+      currentPageIncoming = page;
+      try {
+        const triples = await fetchIncomingTriples(page, 'incoming'); // or your fetchIncomingTriples()
+        renderIncomingTable(triples); // or renderTable(triples, 'incoming-table') if unified
+        renderPaginationIncoming(triples.length === pageSize);
+      } catch (err) {
+        document.getElementById('incoming-table').innerHTML =
+          `<p style="color:red;">Error: ${err.message}</p>`;
+        document.getElementById('pagination-incoming').innerHTML = '';
+      }
+    }
+
+    // --- Initial Load ---
     (async () => {
       await fetchEntityInfo();
-      goToPage(1);
+      goToPageOutgoing(1);
+      goToPageIncoming(1);
     })();
+
   </script>
 </body>
 </html>
