@@ -81,10 +81,11 @@
     prefix esr: <http://elites_suisses/resource/>
     prefix eso: <http://elites_suisses/ontology/>
     prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+    prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
 
     select ?generation (count(*) as ?number)
     where {
-        ?s a eso:Person;
+        ?s a crm:E21;
         eso:birthYear ?birth.
         FILTER (?birth != 0)   
         BIND ( 
