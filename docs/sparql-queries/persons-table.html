@@ -26,6 +26,16 @@
     const tableContainer = document.getElementById('tableContainer');
     const paginationContainer = document.getElementById('pagination');
 
+    function convertEntityURI(uri) {
+        const match = uri.match(/^http:\/\/elites_suisses\/resource\/p(\d+)$/);
+        if (!match) {
+          return null;
+        }
+
+        const id = match[1]; // e.g., "50002" (without the 'p')
+        return `https://elitessuisses.unil.ch/p/${id}`;
+      }
+
     async function fetchData(searchTerm = '') {
       const filterClause = searchTerm ? `FILTER(CONTAINS(LCASE(?name), LCASE("${searchTerm}")))` : '';
       const query = `
@@ -36,16 +46,12 @@
         prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
         prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>
 
-        select ?s ?name ?birthYear ?url
+        select ?s ?name ?birthYear
         where {
             ?s a crm:E21;
                sdh-short:P9 ?name;
                eso:birthYear ?birthYear.
             ${filterClause}
-            BIND(
-                URI(REPLACE(str(?s), 'http://elites_suisses/resource/','https://elitessuisses.unil.ch/p/'))
-                AS ?url
-            )
         }
         ORDER BY ?name
         LIMIT 100
@@ -59,8 +65,7 @@
         allData = data.results.bindings.map(row => ({
           uri: row.s?.value || '#',
           name: row.name?.value || 'N/A',
-          birthYear: row.birthYear?.value || 'N/A',
-          url: row.url?.value || '#'
+          birthYear: row.birthYear?.value || 'N/A'
         }));
         filteredData = [...allData];
         renderTable();
@@ -80,11 +85,14 @@
         return;
       }
 
+
+
       let tableHTML = `<br/>
       <table><thead><tr><th>Forename</th><th>Birth Year</th><th>Profile</th></tr></thead><tbody>`;
       pageData.forEach(row => {
-        tableHTML += `<tr><td><a href="./instance-page.html?uri=${escapeHtml(row.uri)}" target="_blank">${escapeHtml(row.name)}</a></td><td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(row.url)}" target="_blank">View</a></td></tr>`;
-      });
+        tableHTML += `<tr><td><a href="./instance-page.html?uri=${escapeHtml(row.uri)}" target="_blank">${escapeHtml(row.name)}</a></td>
+          <td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(convertEntityURI(row.uri) || '#')}" target="_blank">View</a></td></tr>`;
+    });
       tableHTML += `</tbody></table>`;
       tableContainer.innerHTML = tableHTML;
     }

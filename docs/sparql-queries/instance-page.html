@@ -10,14 +10,17 @@
         flex-wrap: wrap;
       }
 
-      #outgoing-section, #incoming-section {
+      #outoing-section, #incoming-section {
         flex: 1;
-        min-width: 100px;
+        min-width: 50px;
+        padding: 1%;
+        max-width:fit-content;
+        background: #e5edef;
       }
   </style>
 </head>
 <body>
-  <div class="entity-header" id="entity-header"></div>
+    <div class="entity-header" id="entity-header"></div>
   <div id="tables-container">
     <div id="outoing-section">
       <h3>Instance Properties</h3>
@@ -35,6 +38,7 @@
   <script>
     const urlParams = new URLSearchParams(window.location.search);
     const uri = urlParams.get('uri');
+    const decodedURI = decodeURIComponent(uri);
     const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
 
     
@@ -49,6 +53,30 @@
     let entityName = 'Unknown Entity';
     let entityClass = 'Unknown Class';
 
+    // this function converts the URI to the elites suisses website URLs
+    // according to the class: p, g etc.
+    function convertEntityURI(uri) {
+        if (typeof uri !== 'string') return null;
+
+        // Pattern 1: pXXXXX → /p/XXXXX
+        const pMatch = uri.match(/^http:\/\/elites_suisses\/resource\/p(\d+)$/);
+        if (pMatch) {
+          return `https://elitessuisses.unil.ch/p/${pMatch[1]}`;
+        }
+
+        // Pattern 2: oXXXX → /e/entiteXXXX
+        const gMatch = uri.match(/^http:\/\/elites_suisses\/resource\/g(\d+)$/);
+        if (gMatch) {
+          return `https://elitessuisses.unil.ch/e/entite${gMatch[1]}`;
+        }
+
+        // Unknown pattern
+        console.warn('URI does not match known patterns:', uri);
+        return null;
+      }
+
+    // this functions gets the data to write the entity header
+    // and builds the correspondent HTML code
     async function fetchEntityInfo() {
       const query = `
         SELECT ?name ?class ?birthYear WHERE {
@@ -83,11 +111,56 @@
         entityBirthYear = bindings[0].birthYear?.value && bindings[0].birthYear.value !== "0" ? `(${bindings[0].birthYear.value})` : '';
     }
 
+      // prepare the Elites Suisses website URL 
+      const publicUrl = convertEntityURI(uri);
+      
+      // add the entity header 
+      // it also adds a button to copy the URL and a link to the Elites Suisses website
       document.getElementById('entity-header').innerHTML = `
         <h1>${entityName} <smaller>${entityBirthYear}</smaller></h1>
 
         <p style="font-size:smaller">Instance of class: ${entityClass}</p>
+
+        <div style="margin: 10px 0;" id='button-div'>
+          <button onclick="copyURI()" style="padding: 4 px 8 px; font-size: 0.7em; cursor: pointer; background: #f0f0f0; border: 1px solid #ccc; border-radius: 3px;">
+            📋 Copy Entity URI
+          </button>
+          <span id="copy-status" style="margin-left: 10px; color: green; font-size: 0.9em; display: none;">Copied!</span>
+
+        </div>
       `;
+      if (publicUrl) {
+        document.getElementById('button-div').innerHTML += `
+           &nbsp; &nbsp; &nbsp; <a href="${publicUrl}" target="_blank">View on Elites Suisses</a></p>
+        `;
+      }
+    }
+
+    function copyURI() {
+      if (!uri) {
+        alert('No URI to copy.');
+        return;
+      }
+
+      let decodedURI;
+      try {
+        decodedURI = decodeURIComponent(uri);
+      } catch (e) {
+        alert('Invalid URI encoding.');
+        return;
+      }
+
+      navigator.clipboard.writeText(decodedURI)
+        .then(() => {
+          const status = document.getElementById('copy-status');
+          status.style.display = 'inline';
+          setTimeout(() => {
+            status.style.display = 'none';
+          }, 2000);
+        })
+        .catch(err => {
+          alert('Failed to copy URI: ' + err.message);
+        });
     }
 
     async function fetchOutgoingTriples(page) {
