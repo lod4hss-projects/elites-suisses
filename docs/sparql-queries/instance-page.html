@@ -27,7 +27,7 @@
     async function fetchEntityInfo() {
       const query = `
         SELECT ?name ?class ?birthYear WHERE {
-          <${uri}> <http://elites_suisses/ontology/nameForename> ?name .
+          <${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .
           OPTIONAL { <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class }
           OPTIONAL { <${uri}> <http://elites_suisses/ontology/birthYear> ?birthYear }            
         }
@@ -73,7 +73,7 @@
         SELECT ?p ?o ?oName WHERE {
           BIND (<${uri}> AS ?s)
           ?s ?p ?o.
-          OPTIONAL {?o <http://elites_suisses/ontology/nameForename> ?oName}
+          OPTIONAL {?o <https://sdhss.org/ontology/shortcuts/P9> ?oName}
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
         }
         LIMIT ${pageSize}
@@ -134,10 +134,10 @@
           let href = triple.o;
           // If it's an internal resource, link to person-page.html
           if (triple.o.startsWith('http://elites_suisses/resource/')) {
-            href = `./person-page.html?uri=${encodeURIComponent(triple.o)}`;
+            href = `./instance-page.html?uri=${encodeURIComponent(triple.o)}`;
           }
           
-          const oLabel = triple.oName.length > 2 ? triple.oName : triple.o ; 
+          const oLabel = triple.oName.length > 0 ? triple.oName : triple.o ; 
           objectDisplay = `<a href="${href}">${oLabel}</a>`;
         }
 

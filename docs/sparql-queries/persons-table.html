@@ -33,11 +33,13 @@
         prefix esr: <http://elites_suisses/resource/>
         prefix eso: <http://elites_suisses/ontology/>
         prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+        prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+        prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>
 
         select ?s ?name ?birthYear ?url
         where {
-            ?s a eso:Person;
-               eso:nameForename ?name;
+            ?s a crm:E21;
+               sdh-short:P9 ?name;
                eso:birthYear ?birthYear.
             ${filterClause}
             BIND(
@@ -81,7 +83,7 @@
       let tableHTML = `<br/>
       <table><thead><tr><th>Forename</th><th>Birth Year</th><th>Profile</th></tr></thead><tbody>`;
       pageData.forEach(row => {
-        tableHTML += `<tr><td><a href="./person-page.html?uri=${escapeHtml(row.uri)}" target="_blank">${escapeHtml(row.name)}</a></td><td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(row.url)}" target="_blank">View</a></td></tr>`;
+        tableHTML += `<tr><td><a href="./instance-page.html?uri=${escapeHtml(row.uri)}" target="_blank">${escapeHtml(row.name)}</a></td><td>${escapeHtml(row.birthYear)}</td><td><a href="${escapeHtml(row.url)}" target="_blank">View</a></td></tr>`;
       });
       tableHTML += `</tbody></table>`;
       tableContainer.innerHTML = tableHTML;
