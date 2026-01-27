@@ -213,6 +213,7 @@
           OPTIONAL {?s <https://sdhss.org/ontology/shortcuts/P9> ?sName}
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
         }
+        ORDER BY ?sName
         LIMIT ${pageSize}
         OFFSET ${offset}
       `;
@@ -280,8 +281,8 @@
 
          // Format predicate as link with short label
         const predLabel = getPredicateLabel(triple.p);
-        const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
-
+        // const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
+        const predLink = `<span>${predLabel}</span>`;
 
         html += `
           <tr>
@@ -321,7 +322,8 @@
 
         // Format predicate as link with short label
         const predLabel = getPredicateLabel(triple.p);
-        const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
+        // const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
+        const predLink = `<span>${predLabel}</span>`;
 
         html += `
           <tr>
