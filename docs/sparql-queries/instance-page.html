@@ -3,6 +3,8 @@
 <head>
   <title>SPARQL Triples (JSON)</title>
   <link rel="stylesheet" href="../base_style.css">
+  <!-- manages the enpoint address in just one same place-->
+  <script src="address.js"></script>
   <style>
     #tables-container {
         display: flex;
@@ -39,8 +41,8 @@
     const urlParams = new URLSearchParams(window.location.search);
     const uri = urlParams.get('uri');
     const decodedURI = decodeURIComponent(uri);
-    const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
-
+    // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+    const endpoint = address ;
     
 
     if (!uri) {
@@ -82,7 +84,7 @@
         SELECT ?name ?class ?birthYear WHERE {
           <${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .
           OPTIONAL { <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class }
-          OPTIONAL { <${uri}> <http://elites_suisses/ontology/birthYear> ?birthYear }            
+          OPTIONAL { <${uri}> <https://sdhss.org/ontology/shortcuts/P2> ?birthYear }            
         }
         LIMIT 1
       `;

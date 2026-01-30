@@ -5,13 +5,19 @@
    <meta name="viewport" content="width=device-width, initial-scale=1.0">
    <title>Generations</title>
    <script src="https://d3js.org/d3.v6.min.js"></script>
-   <link rel="stylesheet" href="../base_style.css">
-
+   <!-- manages the enpoint address in just one same place-->
+   <script src="address.js"></script>
+   <link rel="stylesheet" href="../base_style.css"></link>
+   
 </head>
 <body>
    <div id="chart"></div>
    <script>
-    const sparqlEndpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses'
+    // const endpoint = 'https://swiss-elites.lod4hss.cloud/wisski/endpoint/default'
+    // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses'
+
+    // gets endpoint address from one single source
+    const endpoint = address
 
     function csvToJSON(csvText) {
         const lines = csvText.trim().split('\n');
@@ -32,11 +38,13 @@
     prefix eso: <http://elites_suisses/ontology/>
     prefix xsd: <http://www.w3.org/2001/XMLSchema#>
     prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+    prefix swel: <https://swiss-elites.lod4hss.cloud/resource/>
+    prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>
 
     select ?generation (count(*) as ?number)
     where {
         ?s a crm:E21;
-        eso:birthYear ?birth.
+        sdh-short:P2 ?birth.
         FILTER (?birth != 0)   
         BIND ( 
             IF (?birth < 1801, '1800_et_ante', 
@@ -54,7 +62,7 @@
     group by ?generation
     order by ?generation`;
 
-    fetch(sparqlEndpoint + '?query=' + encodeURIComponent(sparqlQuery), {
+    fetch(endpoint + '?query=' + encodeURIComponent(sparqlQuery), {
         headers: { 'Accept': 'application/sparql-results+json' }
     })
     .then(res => res.json())

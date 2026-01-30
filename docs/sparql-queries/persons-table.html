@@ -4,7 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persons</title>
-  <link rel="stylesheet" href="../base_style.css">
+  <link rel="stylesheet" href="../base_style.css"><!-- manages the enpoint address in just one same place-->
+  <script src="address.js"></script>
 </head>
 <body>
   <div>
@@ -15,7 +16,9 @@
   </div>
 
   <script>
-    const SPARQL_ENDPOINT = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+    // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+    // gets endpoint address from one single source
+    const endpoint = address;
     const ITEMS_PER_PAGE = 10;
     let allData = [];
     let currentPage = 1;
@@ -50,7 +53,7 @@
         where {
             ?s a crm:E21;
                sdh-short:P9 ?name;
-               eso:birthYear ?birthYear.
+               sdh-short:P2 ?birthYear.
             ${filterClause}
         }
         ORDER BY ?name
@@ -58,7 +61,7 @@
       `;
 
       try {
-        const response = await fetch(SPARQL_ENDPOINT + '?query=' + encodeURIComponent(query), {
+        const response = await fetch(endpoint + '?query=' + encodeURIComponent(query), {
           headers: { 'Accept': 'application/sparql-results+json' }
         });
         const data = await response.json();
