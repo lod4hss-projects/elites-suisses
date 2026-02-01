@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Persons</title>
-  <link rel="stylesheet" href="../base_style.css"><!-- manages the enpoint address in just one same place-->
+  <link rel="stylesheet" href="../base_style.css">
+  
+  <!-- manages the enpoint address in just one same place-->
   <script src="address.js"></script>
+
 </head>
 <body>
   <div>
@@ -16,7 +19,7 @@
   </div>
 
   <script>
-    // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+    
     // gets endpoint address from one single source
     const endpoint = address;
     const ITEMS_PER_PAGE = 10;
@@ -30,7 +33,7 @@
     const paginationContainer = document.getElementById('pagination');
 
     function convertEntityURI(uri) {
-        const match = uri.match(/^http:\/\/elites_suisses\/resource\/p(\d+)$/);
+        const match = uri.match(/^https:\/\/swiss-elites.lod4hss.cloud\/resource\/p(\d+)$/);
         if (!match) {
           return null;
         }

@@ -3,8 +3,10 @@
 <head>
   <title>SPARQL Triples (JSON)</title>
   <link rel="stylesheet" href="../base_style.css">
+
   <!-- manages the enpoint address in just one same place-->
   <script src="address.js"></script>
+  
   <style>
     #tables-container {
         display: flex;
@@ -43,7 +45,8 @@
     const decodedURI = decodeURIComponent(uri);
     // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
     const endpoint = address ;
-    
+    const dataGraph = ' GRAPH <https://swiss-elites.lod4hss.cloud/resource/>'
+    const ontologyGraph = ''
 
     if (!uri) {
       document.body.innerHTML = '<p>Error: Missing ?uri parameter.</p>';
@@ -61,13 +64,13 @@
         if (typeof uri !== 'string') return null;
 
         // Pattern 1: pXXXXX → /p/XXXXX
-        const pMatch = uri.match(/^http:\/\/elites_suisses\/resource\/p(\d+)$/);
+        const pMatch = uri.match(/^https:\/\/swiss-elites.lod4hss.cloud\/resource\/p(\d+)$/);
         if (pMatch) {
           return `https://elitessuisses.unil.ch/p/${pMatch[1]}`;
         }
 
         // Pattern 2: oXXXX → /e/entiteXXXX
-        const gMatch = uri.match(/^http:\/\/elites_suisses\/resource\/g(\d+)$/);
+        const gMatch = uri.match(/^https:\/\/swiss-elites.lod4hss.cloud\/resource\/g(\d+)$/);
         if (gMatch) {
           return `https://elitessuisses.unil.ch/e/entite${gMatch[1]}`;
         }
@@ -81,23 +84,19 @@
     // and builds the correspondent HTML code
     async function fetchEntityInfo() {
       const query = `
-        SELECT ?name ?class ?birthYear WHERE {
+        PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+        SELECT ?name ?class ?classLabel ?birthYear WHERE {
           <${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .
           OPTIONAL { <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class }
+          OPTIONAL { ?class rdfs:label ?classLabel }
           OPTIONAL { <${uri}> <https://sdhss.org/ontology/shortcuts/P2> ?birthYear }            
         }
         LIMIT 1
       `;
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/sparql-query',
-          'Accept': 'application/sparql-results+json'
-        },
-        body: query
-      });
-
+      const response = await fetch(endpoint + '?query=' + encodeURIComponent(query), {
+          headers: { 'Accept': 'application/sparql-results+json' }
+        });
 
       if (!response.ok) {
         const text = await response.text();
@@ -109,7 +108,7 @@
 
       if (bindings.length > 0) {
         entityName = bindings[0].name?.value || entityName;
-        entityClass = bindings[0].class?.value || entityClass;
+        entityClass = bindings[0].classLabel?.value ? `<i>${bindings[0].classLabel.value}</i>` : `(${bindings[0].class.value})` ;
         entityBirthYear = bindings[0].birthYear?.value && bindings[0].birthYear.value !== "0" ? `(${bindings[0].birthYear.value})` : '';
     }
 
@@ -169,25 +168,21 @@
       const offset = (page - 1) * pageSize;
       const query = `
         SELECT ?p ?o ?oName WHERE {
+         ${dataGraph} {
           BIND (<${uri}> AS ?s)
           ?s ?p ?o.
           OPTIONAL {?o <https://sdhss.org/ontology/shortcuts/P9> ?oName}
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
         }
+          }
         LIMIT ${pageSize}
         OFFSET ${offset}
       `;
 
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/sparql-query',
-          'Accept': 'application/sparql-results+json'
-        },
-        body: query
-      });
-
+      const response = await fetch(endpoint + '?query=' + encodeURIComponent(query), {
+          headers: { 'Accept': 'application/sparql-results+json' }
+        });
       if (!response.ok) {
         const text = await response.text();
         throw new Error(`SPARQL error: ${response.status} ${response.statusText}\n${text}`);
@@ -210,26 +205,24 @@
       const offset = (page - 1) * pageSize;
       const query = `
         SELECT ?s ?p ?sName WHERE {
+         ${dataGraph} {
           BIND (<${uri}> AS ?o)
           ?s ?p ?o.
           OPTIONAL {?s <https://sdhss.org/ontology/shortcuts/P9> ?sName}
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
-        }
+          }
+          }
         ORDER BY ?sName
         LIMIT ${pageSize}
         OFFSET ${offset}
       `;
 
-      const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
+      // const endpoint = ;
 
-      const response = await fetch(endpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/sparql-query',
-          'Accept': 'application/sparql-results+json'
-        },
-        body: query
-      });
+      console.log(query)
+        const response = await fetch(endpoint + '?query=' + encodeURIComponent(query), {
+          headers: { 'Accept': 'application/sparql-results+json' }
+        });
 
       if (!response.ok) {
         const text = await response.text();
@@ -273,7 +266,7 @@
         if (triple.o.startsWith('http')) {
           let href = triple.o;
           // If it's an internal resource, link to person-page.html
-          if (triple.o.startsWith('http://elites_suisses/resource/')) {
+          if (triple.o.startsWith('https://swiss-elites.lod4hss.cloud/resource/')) {
             href = `./instance-page.html?uri=${encodeURIComponent(triple.o)}`;
           }
           
@@ -314,7 +307,7 @@
         if (triple.s.startsWith('http')) {
           let href = triple.s;
           // If it's an internal resource, link to person-page.html
-          if (triple.s.startsWith('http://elites_suisses/resource/')) {
+          if (triple.s.startsWith('https://swiss-elites.lod4hss.cloud/resource/')) {
             href = `./instance-page.html?uri=${encodeURIComponent(triple.s)}`;
           }
           
