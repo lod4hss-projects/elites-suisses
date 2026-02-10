@@ -43,7 +43,7 @@
       }
 
     async function fetchData(searchTerm = '') {
-      const filterClause = searchTerm ? `FILTER(CONTAINS(LCASE(?name), LCASE("${searchTerm}")))` : '';
+      const filterClause = searchTerm ? `FILTER(CONTAINS(?name, "${searchTerm}"))` : '';
       const query = `
         prefix owl: <http://www.w3.org/2002/07/owl#>
         prefix esr: <http://elites_suisses/resource/>
