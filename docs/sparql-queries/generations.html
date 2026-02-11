@@ -20,18 +20,7 @@
     // gets endpoint address from one single source
     const endpoint = address
 
-    function csvToJSON(csvText) {
-        const lines = csvText.trim().split('\n');
-        const headers = lines[0].split(',');
-        return lines.slice(1).map(line => {
-            const values = line.split(',');
-            const obj = {};
-            headers.forEach((header, i) => {
-                obj[header] = isNaN(values[i]) ? values[i] : Number(values[i]);
-            });
-            return obj;
-        });
-    }
+    
 
     const sparqlQuery = `
     prefix owl: <http://www.w3.org/2002/07/owl#>

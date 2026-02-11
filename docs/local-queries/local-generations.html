@@ -1,103 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Generations</title>
-   <script src="https://d3js.org/d3.v6.min.js"></script>
+  <meta charset="UTF-8">
+  <title>SPARQL + D3 Bar Chart</title>
+  <script src="https://d3js.org/d3.v7.min.js"></script>
+  <script src="https://rdf.js.org/comunica-browser/versions/v4/engines/query-sparql/comunica-browser.js"></script>
+  <link rel="stylesheet" href="../base_style.css"></link>
 
-   <script src="https://rdf.js.org/comunica-browser/versions/v4/engines/query-sparql/comunica-browser.js"></script>
-
-   <link rel="stylesheet" href="../base_style.css"></link>
-   
+<style>
+    .bar {
+      fill: steelblue;
+    }
+    .bar:hover {
+      fill: orange;
+    }
+    .axis text {
+      font: 10px sans-serif;
+    }
+    .axis path,
+    .axis line {
+      fill: none;
+      stroke: #000;
+      shape-rendering: crispEdges;
+    }
+    .label {
+      font: 12px sans-serif;
+      text-anchor: middle;
+    }
+  </style>
 </head>
 <body>
-   <div id="chart"></div>
-   <script>
-    // const endpoint = 'https://swiss-elites.lod4hss.cloud/wisski/endpoint/default'
-    // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses'
+  <h3>Generations Count (from SPARQL on local Turtle file)</h3>
+  <div id="chart"></div>
 
-    const endpoint = 'https://elites-suisses.lod4hss.org/data/statements_20260130_wisski.ttl'; // your Turtle file URL
+  <script>
 
-    function csvToJSON(csvText) {
-        const lines = csvText.trim().split('\n');
-        const headers = lines[0].split(',');
-        return lines.slice(1).map(line => {
-            const values = line.split(',');
-            const obj = {};
-            headers.forEach((header, i) => {
-                obj[header] = isNaN(values[i]) ? values[i] : Number(values[i]);
-            });
-            return obj;
-        });
-    }
-
-    const allBindings = []; // Reset
-
+    // Your SPARQL query
     const query = `
-    prefix owl: <http://www.w3.org/2002/07/owl#>
-    prefix esr: <http://elites_suisses/resource/>
-    prefix eso: <http://elites_suisses/ontology/>
-    prefix xsd: <http://www.w3.org/2001/XMLSchema#>
-    prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
-    prefix swel: <https://swiss-elites.lod4hss.cloud/resource/>
-    prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>
+      prefix owl: <http://www.w3.org/2002/07/owl#>
+      prefix esr: <http://elites_suisses/resource/>
+      prefix eso: <http://elites_suisses/ontology/>
+      prefix xsd: <http://www.w3.org/2001/XMLSchema#>
+      prefix crm: <http://www.cidoc-crm.org/cidoc-crm/>
+      prefix swel: <https://swiss-elites.lod4hss.cloud/resource/>
+      prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>
 
-    select ?generation (count(*) as ?number)
-    where {
-        ?s a crm:E21;
-        sdh-short:P2 ?birth.
-        FILTER (?birth != 0)   
-        BIND ( 
-            IF (?birth < 1801, '1800_et_ante', 
-                IF (?birth < 1826, '1801-1925',
-                    IF (?birth < 1851, '1826-1850',
-                        IF (?birth < 1876, '1851-1875', 
-                            IF (?birth < 1901, '1876-1900', 
-                            IF (?birth < 1926, '1901-1925', 
-                            IF (?birth < 1951, '1926-1950', 
-                            IF (?birth < 1976, '1951-1975', 
-                            IF (?birth > 1975, '1976-...', 'none'))))))))
-                    ) AS ?generation
-        )
-    } 
-    group by ?generation
-    order by ?generation`;
+      select ?generation (count(*) as ?number)
+      where {
+          ?s a crm:E21;
+          sdh-short:P2 ?birth.
+          FILTER (?birth != 0)   
+          BIND ( 
+              IF (?birth < 1801, '1800_et_ante', 
+                  IF (?birth < 1826, '1801-1925',
+                      IF (?birth < 1851, '1826-1850',
+                          IF (?birth < 1876, '1851-1875', 
+                              IF (?birth < 1901, '1876-1900', 
+                              IF (?birth < 1926, '1901-1925', 
+                              IF (?birth < 1951, '1926-1950', 
+                              IF (?birth < 1976, '1951-1975', 
+                              IF (?birth > 1975, '1976-...', 'none'))))))))
+                      ) AS ?generation
+              )
+      } 
+      group by ?generation
+      order by ?generation
+    `;
 
-    try {
-        const myEngine = new Comunica.QueryEngine();
-        const result = myEngine.queryBindings(query, {
-          sources: [endpoint],
-          // You can also add other sources or set default graph
-        })
+    // Replace with your actual TTL file URL
+    const ttlUrl = 'https://elites-suisses.lod4hss.org/data/statements_20260130_wisski.ttl'; // your Turtle file URL
+
+    const generation = [];
+    const number = [];
+
+    // Run query
+    // https://comunica.dev/docs/query/getting_started/query_browser_app/
+    new Comunica.QueryEngine().queryBindings(query, {
+      sources: [ttlUrl]    })
+    .then (result => {
+        result.on('data', binding => {
+            
+          generation.push(binding.get('generation').value);
+          number.push(parseInt(binding.get('number').value));
+        });
+
+         result.on('end', () => {
+        // ✅ Now all data is collected — render chart
+        console.log("Generations:", generation);
+        console.log("Counts:", number);
+
         
 
-        result.on('data', (binding) => {
-          allBindings.push(binding);
-        });
-
-        result.on('end', () => {
-          console.log('Total results:', allBindings.length);
-          
-        });
-
-    }
-
-    catch (err) {
-        document.getElementById('results').innerHTML = `<p style="color:red;">Engine Error: ${err.message}</p>`;
-      }
-    
-    console.log(allBindings)
-    
-      const generations = allBindings.bindings.map(b => b.generation.value);
-        const numbers = allBindings.bindings.map(b => parseInt(b.number.value, 10));
-
-        const labels = generations;
-        const counts = numbers;
+        const labels = generation;
+        const counts = number;
 
         const margin = { top: 20, right: 20, bottom: 150, left: 40 };
         const width = Math.min(600, window.innerWidth - 40) - margin.left - margin.right;
         const height = Math.min(450, window.innerHeight - 100) - margin.top - margin.bottom;
+
 
 
     // Create the SVG container
@@ -174,6 +174,14 @@
     .attr('height', d => height - y(d))
     .attr("fill", "#add8e6");
 
-   </script>   
+    });
+})
+    .catch(err => {
+      console.error("Error running SPARQL query:", err);
+      document.getElementById("chart").innerText = "Error loading data: " + err.message;
+    });
+
+    
+  </script>
 </body>
 </html>
