@@ -57,6 +57,7 @@
     let currentPage = 1;
     let entityName = 'Unknown Entity';
     let entityClass = 'Unknown Class';
+    let entityBirthYear = ''
 
     // this function converts the URI to the elites suisses website URLs
     // according to the class: p, g etc.
@@ -86,8 +87,9 @@
       const query = `
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
         SELECT ?name ?class ?classLabel ?birthYear WHERE {
-          <${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .
-          OPTIONAL { <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class }
+          <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class 
+          
+          OPTIONAL {<${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .}
           OPTIONAL { ?class rdfs:label ?classLabel }
           OPTIONAL { <${uri}> <https://sdhss.org/ontology/shortcuts/P2> ?birthYear }            
         }

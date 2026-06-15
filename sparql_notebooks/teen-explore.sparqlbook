@@ -1,0 +1,14 @@
+[
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "SELECT *\nwhere {\n    <https://swiss-elites.lod4hss.cloud/resource/bir_88458> ?p ?o\n}\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "SELECT *\nwhere {\n    <https://swiss-elites.lod4hss.cloud/resource/bir_88458> a ?class.\n    OPTIONAL {?class rdfs:label ?classLabel}\n}\n\n",
+    "metadata": {}
+  }
+]
