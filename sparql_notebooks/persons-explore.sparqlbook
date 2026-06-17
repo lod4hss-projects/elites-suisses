@@ -1,0 +1,50 @@
+[
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "SELECT *\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    # p88459\n    <https://swiss-elites.lod4hss.cloud/resource/p71142> ?p ?o.\n    OPTIONAL {?p rdfs:label ?pLabel}\n}\n}\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "### Same query in GraphDB local\n# without graph clause\nSELECT *\nwhere {\n    # p88459\n    <https://swiss-elites.lod4hss.cloud/resource/p71142> ?p ?o.\n    OPTIONAL {?p rdfs:label ?pLabel}\n}\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "SELECT *\nwhere {\n    \n    <https://sdhss.org/ontology/social-life-core/P23> ?p ?o.\n}",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "select *\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    ?p owl:sameAs ?uri\n    OPTIONAL {\n        ?p <https://sdhss.org/ontology/shortcuts/P9> ?pLabel\n    }\n    }\n}\nlimit 10",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\nselect ?p (COUNT(*) AS ?number) ?pLabel\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    ?s ?p ?o .\n    OPTIONAL {?p rdfs:label ?pLabel}\n} \n}\nGROUP BY ?p ?pLabel\nOrder by desc(?number)",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nSELECT *\nWHERE {\n?s owl:sameAs ?o\nFILTER(contains(str(?o), 'wikida'))}\nLIMIT 10",
+    "metadata": {}
+  },
+  {
+    "kind": 1,
+    "language": "markdown",
+    "value": "## Test insert to Wisski Elites Suisses database\n\nthis works if anonymous writing allowed",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "INSERT DATA {\n GRAPH <http://elites-suisses.org/test> {\n  <http://example.org/person/luke> <http://xmlns.com/foaf/0.1/name> \"Luke Luky\" .\n  <http://example.org/person/luke> <http://xmlns.com/foaf/0.1/knows> <http://example.org/person/jane> .\n}\n}",
+    "metadata": {}
+  }
+]
