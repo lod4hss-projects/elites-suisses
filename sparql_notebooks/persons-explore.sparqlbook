@@ -36,6 +36,30 @@
     "metadata": {}
   },
   {
+    "kind": 2,
+    "language": "sparql",
+    "value": "select * where {\n    \n    {<https://swiss-elites.lod4hss.cloud/resource/p55864> ?p ?o .}\n    UNION\n    {?s ?p1 <https://swiss-elites.lod4hss.cloud/resource/p55864>}\n} limit 100",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "",
+    "metadata": {}
+  },
+  {
     "kind": 1,
     "language": "markdown",
     "value": "## Test insert to Wisski Elites Suisses database\n\nthis works if anonymous writing allowed",
