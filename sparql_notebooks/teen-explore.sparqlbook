@@ -10,5 +10,11 @@
     "language": "sparql",
     "value": "SELECT *\nwhere {\n    <https://swiss-elites.lod4hss.cloud/resource/bir_88458> a ?class.\n    OPTIONAL {?class rdfs:label ?classLabel}\n}\n\n",
     "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "### Query from SPARQLIS\n# Get all the marriages\n\nPREFIX n2: <http://www.cidoc-crm.org/cidoc-crm/>\nPREFIX n6: <https://sdhss.org/ontology/shortcuts/>\nPREFIX n7: <https://sdhss.org/ontology/social-life-core/>\nSELECT DISTINCT ?E21_1 ?P9_103 ?C9_205 ?P20_309 ?P9_410\nWHERE { ?E21_1 a n2:E21 .\n        ?E21_1 n6:P9 ?P9_103 .\n        ?C9_205 a n7:C9 .\n        ?C9_205 n7:P20 ?E21_1 .\n        ?C9_205 n7:P20 ?P20_309 .\n        ?P20_309 n6:P9 ?P9_410 . \n  FILTER ((?E21_1 != ?P20_309) && (str(?E21_1) < str(?P20_309)) )}\nLIMIT 200",
+    "metadata": {}
   }
 ]
