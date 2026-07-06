@@ -47,6 +47,10 @@
     const endpoint = address ;
     const dataGraph = ' GRAPH <https://swiss-elites.lod4hss.cloud/resource/>'
     const ontologyGraph = ''
+    const originatesFromGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/originatesFrom>'
+    const baseFieldsGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/baseFields>'
+
+
 
     if (!uri) {
       document.body.innerHTML = '<p>Error: Missing ?uri parameter.</p>';
@@ -86,10 +90,12 @@
     async function fetchEntityInfo() {
       const query = `
         PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-        SELECT ?name ?class ?classLabel ?birthYear WHERE {
+        SELECT ?sName ?class ?classLabel ?birthYear WHERE {
           <${uri}> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?class 
           
           OPTIONAL {<${uri}> <https://sdhss.org/ontology/shortcuts/P9> ?name .}
+          OPTIONAL {?class <http://www.w3.org/2000/01/rdf-schema#label> ?sClassLabel}
+          BIND (COALESCE(?name, ?sClassLabel, 'Unknown Label') AS ?sName )
           OPTIONAL { ?class rdfs:label ?classLabel }
           OPTIONAL { <${uri}> <https://sdhss.org/ontology/shortcuts/P2> ?birthYear }            
         }
@@ -109,7 +115,7 @@
       const bindings = data.results.bindings;
 
       if (bindings.length > 0) {
-        entityName = bindings[0].name?.value || entityName;
+        entityName = bindings[0].sName?.value || entityName;
         entityClass = bindings[0].classLabel?.value ? `<i>${bindings[0].classLabel.value}</i>` : `(${bindings[0].class.value})` ;
         entityBirthYear = bindings[0].birthYear?.value && bindings[0].birthYear.value !== "0" ? `(${bindings[0].birthYear.value})` : '';
     }
@@ -169,11 +175,16 @@
     async function fetchOutgoingTriples(page) {
       const offset = (page - 1) * pageSize;
       const query = `
-        SELECT ?p ?o ?oName WHERE {
-         ${dataGraph} {
+        SELECT ?p ?o ?pLabel ?oName WHERE {
+         # ${dataGraph} 
+         {
           BIND (<${uri}> AS ?s)
           ?s ?p ?o.
+          MINUS { ${baseFieldsGraph} {?s ?p ?o }}
+          MINUS { ${originatesFromGraph} {?s ?p ?o }}          
           OPTIONAL {?o <https://sdhss.org/ontology/shortcuts/P9> ?oName}
+          OPTIONAL {?p <http://www.w3.org/2000/01/rdf-schema#label> ?pLbl}
+          BIND (COALESCE(?pLbl, 'Unknown Label') AS ?pLabel )
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
         }
           }
@@ -199,6 +210,7 @@
       return data.results.bindings.map(binding => ({
         p: binding.p?.value || '',
         o: binding.o?.value || '',
+        pLabel: binding.pLabel?.value || '',
         oName: binding.oName?.value || ''
       }));
     }
@@ -206,11 +218,20 @@
     async function fetchIncomingTriples(page) {
       const offset = (page - 1) * pageSize;
       const query = `
-        SELECT ?s ?p ?sName WHERE {
-         ${dataGraph} {
+        SELECT ?s ?p ?pLabel ?sName WHERE {
+         # ${dataGraph} 
+         {
           BIND (<${uri}> AS ?o)
           ?s ?p ?o.
-          OPTIONAL {?s <https://sdhss.org/ontology/shortcuts/P9> ?sName}
+          MINUS { ${baseFieldsGraph} {?s ?p ?o }}
+          MINUS { ${originatesFromGraph} {?s ?p ?o }}
+          OPTIONAL {?s <https://sdhss.org/ontology/shortcuts/P9> ?sLabel}
+          OPTIONAL {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?sClass.
+                ?sClass <http://www.w3.org/2000/01/rdf-schema#label> ?sClassLabel}
+          BIND (COALESCE(?sLabel, ?sClassLabel, 'Unknown Label') AS ?sName )
+          OPTIONAL {?p <http://www.w3.org/2000/01/rdf-schema#label> ?pLbl}
+                    OPTIONAL {?p <http://www.w3.org/2000/01/rdf-schema#label> ?pLbl}
+          BIND (COALESCE(?pLbl, 'Unknown Label') AS ?pLabel )
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
           }
           }
@@ -240,6 +261,7 @@
       return data.results.bindings.map(binding => ({
         s: binding.s?.value || '',
         p: binding.p?.value || '',
+        pLabel: binding.pLabel?.value || '',
         sName: binding.sName?.value || ''
       }));
 }
@@ -276,10 +298,10 @@
           objectDisplay = `<a href="${href}">${oLabel}</a>`;
         }
 
-         // Format predicate as link with short label
-        const predLabel = getPredicateLabel(triple.p);
-        // const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
-        const predLink = `<span>${predLabel}</span>`;
+        // Format predicate as link with short label
+        // const predURI = getPredicateLabel(triple.p);
+        const predLink = `<a href="${triple.p}" target="_blank">${triple.pLabel}</a>`;
+        //const predLink = `<span>${predURI}</span>`;
 
         html += `
           <tr>
@@ -318,9 +340,9 @@
         }
 
         // Format predicate as link with short label
-        const predLabel = getPredicateLabel(triple.p);
-        // const predLink = `<a href="${triple.p}" target="_blank">${predLabel}</a>`;
-        const predLink = `<span>${predLabel}</span>`;
+        // const predLabel = getPredicateLabel(triple.p);
+        const predLink = `<a href="${triple.p}" target="_blank">${triple.pLabel}</a>`;
+        // const predLink = `<span>${predLabel}</span>`;
 
         html += `
           <tr>
