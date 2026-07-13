@@ -18,7 +18,8 @@
 
         if (isValidResource) {
             // 2. Build destination URL and redirect instantly
-            const targetUrl = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodeURIComponent(window.location.href);
+            // const targetUrl = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodeURIComponent(window.location.href);
+            const targetUrl = "https://elites-suisses.lod4hss.org/sparql-queries/instance-page.html?uri=" + encodeURIComponent(window.location.href);
             window.location.replace(targetUrl);
         }
     </script>
@@ -42,7 +43,8 @@
         // 3. Display the appropriate UI section based on the URL check performed in the <head>
         if (isValidResource) {
             document.getElementById('redirect-section').classList.remove('hidden');
-            document.getElementById('redirect-link').href = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodeURIComponent(window.location.href);
+            // document.getElementById('redirect-link').href = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodeURIComponent(window.location.href);
+            document.getElementById('redirect-link').href = "https://elites-suisses.lod4hss.org/sparql-queries/instance-page.html?uri=" + encodeURIComponent(window.location.href);
         } else {
             document.getElementById('error-section').classList.remove('hidden');
             // Dynamically update the page title for SEO and browser tabs
