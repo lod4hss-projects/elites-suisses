@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LESSH Project</title>
+    <script>
+        // 1. Retrieve the full requested URL (e.g., https://yoursite.com/page-a)
+        const currentUri = window.location.href;
+        
+        // 2. Properly encode the URI to safely pass it into the ?uri= parameter
+        const encodedUri = encodeURIComponent(currentUri);
+        
+        // 3. Build the destination URL
+        const targetUrl = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodedUri;
+        
+        // 4. Instant redirect without leaving a trace in the browser's "Back" history
+        window.location.replace(targetUrl);
+    </script>
+</head>
+<body>
+    <p>Redirecting to requested resource... If you are not redirected automatically, please <a id="link" href="#">click here</a>.</p>
+    <noscript>
+        <p><strong>Note:</strong> JavaScript is disabled in your browser. Please enable JavaScript or navigate manually to <a href="https://swiss-elites.lod4hss.cloud/">the LESSH Project portal</a>.</p>
+    </noscript>
+    <script>
+        document.getElementById('link').href = "https://swiss-elites.lod4hss.cloud/wisski/get?uri=" + encodeURIComponent(window.location.href);
+    </script>
+</body>
+</html>
