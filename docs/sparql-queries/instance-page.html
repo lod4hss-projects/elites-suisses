@@ -69,13 +69,13 @@
         if (typeof uri !== 'string') return null;
 
         // Pattern 1: pXXXXX → /p/XXXXX
-        const pMatch = uri.match(/^https:\/\/swiss-elites.lod4hss.cloud\/resource\/p(\d+)$/);
+        const pMatch = uri.match(/^https:\/\/elites-suisses.lod4hss.org\/resource\/p(\d+)$/);
         if (pMatch) {
           return `https://elitessuisses.unil.ch/p/${pMatch[1]}`;
         }
 
         // Pattern 2: oXXXX → /e/entiteXXXX
-        const gMatch = uri.match(/^https:\/\/swiss-elites.lod4hss.cloud\/resource\/g(\d+)$/);
+        const gMatch = uri.match(/^https:\/\/elites-suisses.lod4hss.org\/resource\/g(\d+)$/);
         if (gMatch) {
           return `https://elitessuisses.unil.ch/e/entite${gMatch[1]}`;
         }
@@ -290,7 +290,7 @@
         if (triple.o.startsWith('http')) {
           let href = triple.o;
           // If it's an internal resource, link to person-page.html
-          if (triple.o.startsWith('https://swiss-elites.lod4hss.cloud/resource/')) {
+          if (triple.o.startsWith('https://elites-suisses.lod4hss.org/resource/')) {
             href = `./instance-page.html?uri=${encodeURIComponent(triple.o)}`;
           }
           
@@ -331,7 +331,7 @@
         if (triple.s.startsWith('http')) {
           let href = triple.s;
           // If it's an internal resource, link to person-page.html
-          if (triple.s.startsWith('https://swiss-elites.lod4hss.cloud/resource/')) {
+          if (triple.s.startsWith('https://elites-suisses.lod4hss.org/resource/')) {
             href = `./instance-page.html?uri=${encodeURIComponent(triple.s)}`;
           }
           
