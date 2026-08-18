@@ -1,0 +1,434 @@
+<?xml version="1.0" encoding="UTF-8"?>                                             
+                        <rdf:RDF 
+                              xml:base="https://ontome.net/"
+                            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                            xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                            xmlns:owl="http://www.w3.org/2002/07/owl#"
+                            xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+                            xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+                            xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+                            xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                          >
+                          <owl:Ontology rdf:about="https://ontome.net/">
+                            <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Exported from OntoME: Profile or Profiles in Project. The ontological consistency is not granted per se and must be checked</owl:versionInfo><rdfs:comment xml:lang="en">pr-588: Geographical Place - Type ongoing – This profile describes the type of a Geographical Place that is identity-defining, which means that it is unique and applicable to the whole life of a Geographical Place. It does not describe the classification of a Geographical Place, which can be evolving or context-specific.
+The profile Geographical Place - Classification (to come soon) describes those classifications that are not necessarily identity-defining and that can be simultaneous, contradictory, contextualised, and time-bound.
+What can be described in this profile:
+
+The type of the Geographical Place, documented with a controlled vocabulary
+The Geographical Place Kind, a broader term for the Geographical Place Type
+
+Examples:
+
+The Geographical Place "Airport of Beyrouth" has type "Airport", which is a specialisation of the Geographical Place Kind "Infrastructure Area".
+</rdfs:comment><rdfs:label xml:lang="en">Profile(s): Geographical Place - Type ongoing</rdfs:label>
+                            </owl:Ontology><owl:Class rdf:about="https://sdhss.org/ontology/core/C13">
+            <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:C13</skos:notation><owl:sameAs rdf:resource="https://ontome.net/ontology/c363"/>
+            <rdfs:comment xml:lang="en" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class comprises parts of the Earth's surface that can be represented by photographs, paintings or maps, and that have some coherent characteristics related to their natural features (e.g., a mountain) or to the human activities that have shaped them (e.g., a harbour). These features make them identifiable and unique. The relevant portion of the surface of the Earth can be covered by buildings, water (river, sea, ...) which are part of the identifying features. The more specific identity of instances of this class is provided by a controlled vocabulary of geographical place types.</rdfs:comment>
+                        <rdfs:label xml:lang="en">Geographical Place</rdfs:label></owl:Class>   <owl:Class rdf:about="https://sdhss.org/ontology/core/C14">
+            <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:C14</skos:notation><owl:sameAs rdf:resource="https://ontome.net/ontology/c364"/>
+            <rdfs:comment xml:lang="en" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class comprises concepts denoted by terms from thesauri and controlled vocabularies used to characterize and classify instances of the 'C14 Geographical Place'.</rdfs:comment>
+                        <rdfs:label xml:lang="en">Geographical Place Type</rdfs:label></owl:Class>   <owl:Class rdf:about="https://sdhss.org/ontology/core/C51">
+            <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:C51</skos:notation><owl:sameAs rdf:resource="https://ontome.net/ontology/c1210"/>
+            <rdfs:comment xml:lang="en" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class comprises concepts denoted by terms from thesauri and controlled vocabularies used to identify more precisely an instance of the class C8 Geographical Place without needing to create sub-classes of that class. Instances of C8 Geographical Place can only be linked to a unique instance of C51 Geographical Place Kind. Therefore, instances of C51 Geographical Place Kind, while in essence similar to instances of E55 Geographical Place Type, have a different function of further specifying the intension of an instance of C8 Geographical Place, whereas instances of E55 Type can be used to epistemically classify instances of C8 Geographical Place.
+Instances of C51 Geographical Place Kind represent concepts in contrast to instances of E41 Appellation which are used to name instances of classes.</rdfs:comment>
+                        <rdfs:label xml:lang="en">Geographical Place Kind</rdfs:label></owl:Class><owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P103">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                <rdfs:comment xml:lang="en">This property associates an instance of sdh:C13 Geographical Place with the type which defines its identity. Because this type is identity-defining, a Geographical Place can only have one Geographical Type, defined in a controlled vocabulary.
+Geographical Place Types are different from Geographical Place Kinds
+Unlike Geographical Place Kinds that are specifications of Geographical Places (they could be as such conceptualised as subclasses of Geographical Place) and are supposed be be shared across different projects, Geographical Place Types are a specific classification of a Geographical Place by a project. As such, a Geographical Place Type is a specification of a Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place type</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P103</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3159"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P104">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a Geographical Place Type with the more general Geographical Place Kind.</rdfs:comment>
+                <rdfs:label xml:lang="en">is a specialisation of</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P104</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3163"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C14"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/core/P20">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/core/C51"/>
+                <rdfs:comment xml:lang="en">This property associates a geographical place with its kind, i.e. the general type that defines its identity.
+This kind is rigid i.e. it provides the identity of the place, and therefore cannot change during its whole life. E.g. a settlement cannot become a natural region without changing its identity. Generally used identified types are: natural area (field, wood, desert); built area (settlement, airport); territory (the geographical area controlled by a State, an administrative region); [general term for] road, square; bed of river, lake, sea; elevation (mountain, hill).
+More specific types, that can evolve during the life of the object, are associated to the geographical place using the sdh:C48 Geographical Place Classification class.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geographical place kind</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:P20</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p1110"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty></rdf:RDF>

@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>                                             
+                        <rdf:RDF 
+                              xml:base="https://ontome.net/"
+                            xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+                            xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+                            xmlns:owl="http://www.w3.org/2002/07/owl#"
+                            xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+                            xmlns:swrl="http://www.w3.org/2003/11/swrl#"
+                            xmlns:swrlb="http://www.w3.org/2003/11/swrlb#"
+                            xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+                          >
+                          <owl:Ontology rdf:about="https://ontome.net/">
+                            <owl:versionInfo rdf:datatype="http://www.w3.org/2001/XMLSchema#string">Exported from OntoME: Profile or Profiles in Project. The ontological consistency is not granted per se and must be checked</owl:versionInfo><rdfs:comment xml:lang="en">pr-607: Geographical Place - Geocoordinates Light ongoing – This profile describes the geocoordinates of a Geographical Place according to the WGS 1984 (EPSG:4326) standard World Geodetic System. It uses the shortcut from the Geographical Place directly to the Space Primitive.
+The profile Geographical Place ­- Presence-Coordinates describes with the longer path through the Presence the geolocalisation of Geographical Place and its possible evolution through time.</rdfs:comment><rdfs:label xml:lang="en">Profile(s): Geographical Place - Geocoordinates Light ongoing</rdfs:label>
+                            </owl:Ontology><owl:Class rdf:about="https://sdhss.org/ontology/core/C13">
+            <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh:C13</skos:notation><owl:sameAs rdf:resource="https://ontome.net/ontology/c363"/>
+            <rdfs:comment xml:lang="en" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class comprises parts of the Earth's surface that can be represented by photographs, paintings or maps, and that have some coherent characteristics related to their natural features (e.g., a mountain) or to the human activities that have shaped them (e.g., a harbour). These features make them identifiable and unique. The relevant portion of the surface of the Earth can be covered by buildings, water (river, sea, ...) which are part of the identifying features. The more specific identity of instances of this class is provided by a controlled vocabulary of geographical place types.</rdfs:comment>
+                        <rdfs:label xml:lang="en">Geographical Place</rdfs:label></owl:Class>   <owl:Class rdf:about="https://sdhss.org/ontology/crm-supplement/C40">
+            <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">crm-sup:C40</skos:notation><owl:sameAs rdf:resource="https://ontome.net/ontology/c2012"/>
+            <rdfs:comment xml:lang="en" rdf:datatype="http://www.w3.org/2001/XMLSchema#string">This class comprises spatial descriptions expressed according to the Geographic Coordinate System (GCS), referring to a 3D spherical surface (longitude and latitude) and defining positions on the Earth. It measures locations in angular units—degrees—from the centre of the Earth, with latitude measuring North/South of the Equator and longitude measuring East/West of the Prime Meridian. These pairs of values (long, lat) are situated in the WGS 1984 (EPSG:4326) standard World Geodetic System.</rdfs:comment>
+                        <rdfs:label xml:lang="en">Geocoordinate System</rdfs:label></owl:Class><owl:ObjectProperty rdf:about="https://sdhss.org/ontology/shortcuts/P14">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/crm-supplement/C40"/>
+                <rdfs:comment xml:lang="en">The property associates a Geographical Place with the geocoordinates that define it.
+It is a shortcut of the longer path sdh:C13 Geographical Place, (inverse of) crmP195 was presence of, crm:P167 was within, crm:E53 Place, crm:P168 is defined by.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geocoordinates</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh-short:P14</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3227"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/shortcuts/P14">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/crm-supplement/C40"/>
+                <rdfs:comment xml:lang="en">The property associates a Geographical Place with the geocoordinates that define it.
+It is a shortcut of the longer path sdh:C13 Geographical Place, (inverse of) crmP195 was presence of, crm:P167 was within, crm:E53 Place, crm:P168 is defined by.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geocoordinates</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh-short:P14</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3227"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/shortcuts/P14">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/crm-supplement/C40"/>
+                <rdfs:comment xml:lang="en">The property associates a Geographical Place with the geocoordinates that define it.
+It is a shortcut of the longer path sdh:C13 Geographical Place, (inverse of) crmP195 was presence of, crm:P167 was within, crm:E53 Place, crm:P168 is defined by.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geocoordinates</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh-short:P14</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3227"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty>   <owl:ObjectProperty rdf:about="https://sdhss.org/ontology/shortcuts/P14">
+                <rdfs:range rdf:resource="https://sdhss.org/ontology/crm-supplement/C40"/>
+                <rdfs:comment xml:lang="en">The property associates a Geographical Place with the geocoordinates that define it.
+It is a shortcut of the longer path sdh:C13 Geographical Place, (inverse of) crmP195 was presence of, crm:P167 was within, crm:E53 Place, crm:P168 is defined by.</rdfs:comment>
+                <rdfs:label xml:lang="en">has geocoordinates</rdfs:label>
+                <skos:notation rdf:datatype="http://www.w3.org/2001/XMLSchema#string">sdh-short:P14</skos:notation>
+                <owl:sameAs rdf:resource="https://ontome.net/ontology/p3227"/>
+                <rdfs:domain rdf:resource="https://sdhss.org/ontology/core/C13"/>
+                </owl:ObjectProperty></rdf:RDF>
