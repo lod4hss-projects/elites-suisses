@@ -42,33 +42,45 @@
     "metadata": {}
   },
   {
-    "kind": 2,
-    "language": "sparql",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "sparql",
-    "value": "",
-    "metadata": {}
-  },
-  {
-    "kind": 2,
-    "language": "sparql",
-    "value": "",
-    "metadata": {}
-  },
-  {
     "kind": 1,
     "language": "markdown",
-    "value": "## Test insert to Wisski Elites Suisses database\n\nthis works if anonymous writing allowed",
+    "value": "## Inspect persons properties",
     "metadata": {}
   },
   {
     "kind": 2,
     "language": "sparql",
-    "value": "INSERT DATA {\n GRAPH <http://elites-suisses.org/test> {\n  <http://example.org/person/luke> <http://xmlns.com/foaf/0.1/name> \"Luke Luky\" .\n  <http://example.org/person/luke> <http://xmlns.com/foaf/0.1/knows> <http://example.org/person/jane> .\n}\n}",
+    "value": "prefix sdh:<https://sdhss.org/ontology/core/>\nprefix crm: <http://www.cidoc-crm.org/cidoc-crm/>\n\nselect * where {\n    ?s a crm:E21;\n    \t?p ?o .\n    minus{?s ?p crm:E21}\n}\norder by ?s ?p\noffset 100\nlimit 10",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "prefix sdh:<https://sdhss.org/ontology/core/>\nprefix crm: <http://www.cidoc-crm.org/cidoc-crm/>\n\nselect * where {\n    ?pers a crm:E21.\n    ?pers ^crm:P98/sdh:P6 ?birth_place\n}\n# order by ?pers ?p ?s\noffset 3000\nlimit 10",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX sdh: <https://sdhss.org/ontology/core/>\nPREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT *\nWHERE {\n    ?pers a crm:E21.\n    ?pers ^crm:P98/sdh:P6 ?birth_place.\n    ?birth_place a sdh:C13 ;\n     <https://sdhss.org/ontology/shortcuts/P9> ?label ;\n     <https://sdhss.org/ontology/shortcuts/P14> ?point .\n\n  # Extract lat and long from WKT\n  bind(xsd:float(replace(str(?point), \"^[^0-9\\\\.-]*([-]?[0-9\\\\.]+) .*$\", \"$1\" )) as ?long )\n  bind(xsd:float(replace(str(?point), \"^.* ([-]?[0-9\\\\.]+)[^0-9\\\\.]*$\", \"$1\" )) as ?lat )\n\n  }\n  LIMIT 5\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX sdh: <https://sdhss.org/ontology/core/>\nPREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\n\nSELECT ?birth_place ?label ?long ?lat (count(*) as ?number)\nWHERE {\n    ?pers a crm:E21.\n    ?pers ^crm:P98/sdh:P6 ?birth_place.\n    ?birth_place a sdh:C13 ;\n     <https://sdhss.org/ontology/shortcuts/P9> ?label ;\n     <https://sdhss.org/ontology/shortcuts/P14> ?point .\n\n  # Extract lat and long from WKT\n  bind(xsd:float(replace(str(?point), \"^[^0-9\\\\.-]*([-]?[0-9\\\\.]+) .*$\", \"$1\" )) as ?long )\n  bind(xsd:float(replace(str(?point), \"^.* ([-]?[0-9\\\\.]+)[^0-9\\\\.]*$\", \"$1\" )) as ?lat )\n\n    }\nGROUP BY ?birth_place ?label ?long ?lat\nLIMIT 10\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\nPREFIX sdh: <https://sdhss.org/ontology/core/>\nPREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>\nPREFIX geo: <http://www.opengis.net/ont/geosparql#>\nprefix xsd: <http://www.w3.org/2001/XMLSchema#>\nprefix sdh-short: <https://sdhss.org/ontology/shortcuts/>\n\nSELECT ?generation ?birth_place ?label ?long ?lat (count(*) as ?number)\nWHERE {\n    ?pers a crm:E21;\n            sdh-short:P2 ?birth.\n        FILTER (?birth != 0)   \n        \n    ?pers ^crm:P98/sdh:P6 ?birth_place.\n    ?birth_place a sdh:C13 ;\n     <https://sdhss.org/ontology/shortcuts/P9> ?label ;\n     <https://sdhss.org/ontology/shortcuts/P14> ?point .\n\n  # Extract lat and long from WKT\n  bind(xsd:float(replace(str(?point), \"^[^0-9\\\\.-]*([-]?[0-9\\\\.]+) .*$\", \"$1\" )) as ?long )\n  bind(xsd:float(replace(str(?point), \"^.* ([-]?[0-9\\\\.]+)[^0-9\\\\.]*$\", \"$1\" )) as ?lat )\n\n    BIND ( \n            IF (?birth < 1801, '1800_et_ante', \n                IF (?birth < 1826, '1801-1925',\n                    IF (?birth < 1851, '1826-1850',\n                        IF (?birth < 1876, '1851-1875', \n                            IF (?birth < 1901, '1876-1900', \n                            IF (?birth < 1926, '1901-1925', \n                            IF (?birth < 1951, '1926-1950', \n                            IF (?birth < 1976, '1951-1975', \n                            IF (?birth > 1975, '1976-...', 'none'))))))))\n                    ) AS ?generation\n        )\n\n    }\nGROUP BY ?generation ?birth_place ?label ?long ?lat\nORDER BY ?generation\nLIMIT 10\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "PREFIX owl: <http://www.w3.org/2002/07/owl#>\n        PREFIX sdh: <https://sdhss.org/ontology/core/>\n        PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>\n        PREFIX geo: <http://www.opengis.net/ont/geosparql#>\n        prefix xsd: <http://www.w3.org/2001/XMLSchema#>\n        prefix sdh-short: <https://sdhss.org/ontology/shortcuts/>\n\n        SELECT ?generation ?birth_place ?label ?long ?lat (count(*) as ?number)\n        WHERE {\n            ?pers a crm:E21;\n                    sdh-short:P2 ?birth.\n                FILTER (?birth != 0)   \n                \n            ?pers ^crm:P98/sdh:P6 ?birth_place.\n            ?birth_place a sdh:C13 ;\n            <https://sdhss.org/ontology/shortcuts/P9> ?label ;\n            <https://sdhss.org/ontology/shortcuts/P14> ?point .\n\n        # Extract lat and long from WKT\n        bind(xsd:float(replace(str(?point), \"^[^0-9\\\\.-]*([-]?[0-9\\\\.]+) .*$\", \"$1\" )) as ?long )\n        bind(xsd:float(replace(str(?point), \"^.* ([-]?[0-9\\\\.]+)[^0-9\\\\.]*$\", \"$1\" )) as ?lat )\n\n            BIND ( \n                    IF (?birth < 1801, '1800_et_ante', \n                        IF (?birth < 1826, '1801-1925',\n                            IF (?birth < 1851, '1826-1850',\n                                IF (?birth < 1876, '1851-1875', \n                                    IF (?birth < 1901, '1876-1900', \n                                    IF (?birth < 1926, '1901-1925', \n                                    IF (?birth < 1951, '1926-1950', \n                                    IF (?birth < 1976, '1951-1975', \n                                    IF (?birth > 1975, '1976-...', 'none'))))))))\n                            ) AS ?generation\n                )\n\n            }\n        GROUP BY ?generation ?birth_place ?label ?long ?lat\n        ORDER BY ?generation",
     "metadata": {}
   }
 ]
