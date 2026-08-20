@@ -2,7 +2,13 @@
   {
     "kind": 2,
     "language": "sparql",
-    "value": "SELECT *\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    # p88459\n    <https://swiss-elites.lod4hss.cloud/resource/p71142> ?p ?o.\n    OPTIONAL {?p rdfs:label ?pLabel}\n}\n}\n\n",
+    "value": "## Alain Berset\nSELECT *\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    # p88459\n    <https://elites-suisses.lod4hss.org/resource/p69819> ?p ?o.\n    OPTIONAL {?p rdfs:label ?pLabel}\n}\n}\n\n",
+    "metadata": {}
+  },
+  {
+    "kind": 2,
+    "language": "sparql",
+    "value": "## Alain Berset\nSELECT *\nwhere {\n    graph <https://swiss-elites.lod4hss.cloud/resource/> {\n    # p88459\n    ?s ?p <https://elites-suisses.lod4hss.org/resource/p69819> .\n    OPTIONAL {?p rdfs:label ?pLabel}\n}\n}\n\n",
     "metadata": {}
   },
   {

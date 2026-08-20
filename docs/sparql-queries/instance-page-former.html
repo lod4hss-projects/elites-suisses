@@ -45,12 +45,12 @@
     const decodedURI = decodeURIComponent(uri);
     // const endpoint = 'https://open-gdb.lod4hss.org/rdf4j-server/repositories/elites_suisses';
     const endpoint = address ;
-    const dataGraph = ' GRAPH <https://swiss-elites.lod4hss.cloud/resource/>'
-    const ontologyGraph = ''
-    const originatesFromGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/originatesFrom>'
-    const baseFieldsGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/baseFields>'
+    const dataGraph = ' GRAPH <https://swiss-elites.lod4hss.cloud/resource/>'
+    const ontologyGraph = ''
+    const originatesFromGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/originatesFrom>'
+    const baseFieldsGraph = 'GRAPH <https://swiss-elites.lod4hss.cloud/resource/baseFields>'
 
-// t
+
 
     if (!uri) {
       document.body.innerHTML = '<p>Error: Missing ?uri parameter.</p>';
@@ -176,7 +176,7 @@
       const offset = (page - 1) * pageSize;
       const query = `
         SELECT ?p ?o ?pLabel ?oName WHERE {
-         # ${dataGraph} 
+         # ${dataGraph} 
          {
           BIND (<${uri}> AS ?s)
           ?s ?p ?o.
@@ -218,8 +218,7 @@
     async function fetchIncomingTriples(page) {
       const offset = (page - 1) * pageSize;
       const query = `
-        SELECT ?s ?p ?pLabel ?sName  (GROUP_CONCAT(?o1Label; separator="; ") AS ?associatedObjectsLabels)
-        WHERE {
+        SELECT ?s ?p ?pLabel ?sName WHERE {
          # ${dataGraph} 
          {
           BIND (<${uri}> AS ?o)
@@ -230,16 +229,12 @@
           OPTIONAL {?s <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> ?sClass.
                 ?sClass <http://www.w3.org/2000/01/rdf-schema#label> ?sClassLabel}
           BIND (COALESCE(?sLabel, ?sClassLabel, 'Unknown Label') AS ?sName )
-          OPTIONAL {?s ?p1 ?o1.
-                    ?o1 <https://sdhss.org/ontology/shortcuts/P9> ?o1Label.
-                    FILTER (?o1 != ?o)}
           OPTIONAL {?p <http://www.w3.org/2000/01/rdf-schema#label> ?pLbl}
                     OPTIONAL {?p <http://www.w3.org/2000/01/rdf-schema#label> ?pLbl}
           BIND (COALESCE(?pLbl, 'Unknown Label') AS ?pLabel )
           FILTER (?p != <http://www.w3.org/1999/02/22-rdf-syntax-ns#type>)
           }
           }
-        GROUP BY ?s ?p ?pLabel ?sName  
         ORDER BY ?sName
         LIMIT ${pageSize}
         OFFSET ${offset}
@@ -267,8 +262,7 @@
         s: binding.s?.value || '',
         p: binding.p?.value || '',
         pLabel: binding.pLabel?.value || '',
-        sName: binding.sName?.value || '',
-        associatedObjectsLabels: binding.associatedObjectsLabels?.value || ''
+        sName: binding.sName?.value || ''
       }));
 }
 
@@ -342,8 +336,7 @@
           }
           
           const sLabel = triple.sName.length > 0 ? triple.sName : triple.s; 
-          const sLabelCompl = triple.associatedObjectsLabels.length > 0 ? triple.associatedObjectsLabels : triple.s; 
-          subjectDisplay = `<a href="${href}">${sLabel}</a><br/><span>${sLabelCompl}</span>`;
+          subjectDisplay = `<a href="${href}">${sLabel}</a>`;
         }
 
         // Format predicate as link with short label
