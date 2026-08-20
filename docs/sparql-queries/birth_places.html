@@ -265,12 +265,12 @@
                     fillOpacity: 0.8
                 }).addTo(map);
 
-                const title = isAggregated ? "Total Count (All Gen)" : `Count (${d.generation})`;
+                const title = isAggregated ? "Total Number (All Gen)" : `Number`;
                 const tooltipContent = `
                     <strong>${d.label}</strong>
-                    <div class="row">${title}: <span class="highlight">${d.count}</span></div>
                     <div class="row">Gen: ${d.generation}</div>
-                    <a href="${d.birthPlaceUri}" target="_blank">🔗 Open Resource URI</a>
+                    <div class="row">${title}: <span class="highlight">${d.count}</span></div>
+                    <a href="${d.birthPlaceUri}" target="_blank">🔗 Open Resource Card</a>
                 `;
 
                 circle.on('mouseover', function() {
