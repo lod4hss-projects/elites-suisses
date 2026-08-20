@@ -93,10 +93,11 @@
         </div>
     </div>
 
-    <div id="map"></div>
+    <div id="map">
     <div id="tooltip" class="tooltip"></div>
+    </div>
 
-    <script>
+<script>
         const endpoint = address; 
         
         const sparqlQueryGenerations = `
@@ -279,7 +280,7 @@
                     tooltip.innerHTML = tooltipContent;
                     tooltip.style.opacity = 1;
                     tooltip.style.left = point.x + 'px';
-                    tooltip.style.top = (point.y - 100) + 'px'; // Closer to point
+                    tooltip.style.top = (point.y - 10) + 'px'; // Closer to point
                     
                     this.bringToFront();
                 });
