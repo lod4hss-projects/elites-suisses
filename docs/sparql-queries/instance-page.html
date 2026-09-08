@@ -70,10 +70,11 @@
           return `https://elitessuisses.unil.ch/p/${pMatch[1]}`;
         }
 
-        const gMatch = uri.match(/^https:\/\/elites-suisses.lod4hss.org\/resource\/g(\d+)$/);
-        if (gMatch) {
-          return `https://elitessuisses.unil.ch/e/entite${gMatch[1]}`;
-        }
+        // This must be modified because of the new t_group table
+        // const gMatch = uri.match(/^https:\/\/elites-suisses.lod4hss.org\/resource\/g(\d+)$/);
+        // if (gMatch) {
+        // return `https://elitessuisses.unil.ch/e/entite${gMatch[1]}`;
+        // }
 
         console.warn('URI does not match known patterns:', uri);
         return null;
