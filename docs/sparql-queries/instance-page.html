@@ -211,8 +211,8 @@
         : '';
       
       const query = `
-        SELECT ?s ?p ?pLabel ?sName (GROUP_CONCAT(?o1Label; separator="; ") AS ?associatedObjectsLabels) 
-          (min(?start) as ?beginY) (min(?end) as ?endY)
+        SELECT ?s ?p ?pLabel ?sName (GROUP_CONCAT(?o1Label; separator="; ") AS ?associatedObjectsLabels) (min(?date) as ?eventDate)
+          # (min(?start) as ?beginY) (min(?end) as ?endY)
         WHERE {
          # ${dataGraph} 
          {
@@ -227,6 +227,8 @@
           ## dates
           OPTIONAL { ?s <https://sdhss.org/ontology/shortcuts/P4> ?start }
           OPTIONAL { ?s <https://sdhss.org/ontology/shortcuts/P7> ?end }
+          OPTIONAL { ?s <https://sdhss.org/ontology/shortcuts/P1> ?dateWithin}
+          BIND (COALESCE(?dateWithin, (CONCAT(STR(?start), "-", STR(?end))), 'NA Date') AS ?date )
 
           OPTIONAL {?s ?p1 ?o1.
                     ?o1 <https://sdhss.org/ontology/shortcuts/P9> ?o1Label.
@@ -264,8 +266,7 @@
         p: binding.p?.value || '',
         pLabel: binding.pLabel?.value || '',
         sName: binding.sName?.value || '',
-        beginY: binding.beginY?.value || '',
-        endY: binding.endY?.value || '',
+        eventDate: binding.eventDate?.value || '',
         associatedObjectsLabels: binding.associatedObjectsLabels?.value || ''
       }));
     }
@@ -327,15 +328,14 @@
 
         if (triple.s.startsWith('http')) {
           let href = triple.s;
-          let bY = triple.beginY;
-          let eY = triple.endY ;
+          let eD = triple.eventDate;
           if (triple.s.startsWith('https://elites-suisses.lod4hss.org/resource/')) {
             href = `./instance-page.html?uri=${encodeURIComponent(triple.s)}`;
           }
           
           const sLabel = triple.sName.length > 0 ? triple.sName : triple.s; 
           const sLabelCompl = triple.associatedObjectsLabels.length > 0 ? triple.associatedObjectsLabels : triple.s; 
-          subjectDisplay = `<a href="${href}">${sLabel}</a> (${bY}-${eY})<br/><span>${sLabelCompl}</span>`;
+          subjectDisplay = `<a href="${href}">${sLabel}</a> (${eD})<br/><span>${sLabelCompl}</span>`;
         }
 
         const predLink = `<a href="${triple.p}" target="_blank">${triple.pLabel}</a>`;
