@@ -1,4 +1,4 @@
-Question: What are the dates of the study titles obtained by a person?
+Question: What group an actor (person or group) can be a member of?
 
 ``` sparql
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -14,19 +14,19 @@ PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?person_id ?person_label ?obtention_date
+SELECT ?actor ?actorLabel ?group ?groupLabel
 WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-short:P1 ?obtention_date.
+    ?membership a sdh-slc:C5 ;
+        sdh-slc:P1 ?actor ;
+        sdh-slc:P2 ?group .
 
+    ?actor sdh-short:P9 ?actorLabel .
+    ?group sdh-short:P9 ?groupLabel .
 }
 
 ```
 
-Question: What are the disciplines of the study titles obtained by a person?
+Question: On behalf of which group does an actor (person or group) is member for?
 
 ``` sparql
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -42,20 +42,19 @@ PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?person_id ?person_label ?discipline_id ?discipline_label
+SELECT ?actor ?actorLabel ?group ?groupLabel
 WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-sls:P25 ?discipline_id.
-?discipline_id sdh-short:P9 ?discipline_label.
+    ?membership a sdh-slc:C5 ;
+        sdh-slc:P1 ?actor ;
+        sdh-slc:P81 ?group .
 
+    ?actor sdh-short:P9 ?actorLabel .
+    ?group sdh-short:P9 ?groupLabel .
 }
 
 ```
 
-Question: What are the institutions that delivered the study titles obtained by a person?
+Question: What was the social role of an actor (person or group) during a membership?
 
 ``` sparql
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -71,20 +70,19 @@ PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?person_id ?person_label ?institution_id ?institution_label
+SELECT ?actor ?actorLabel ?role ?roleLabel
 WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-sls:P17 ?institution_id.
-?institution_id sdh-short:P9 ?institution_label.
+    ?membership a sdh-slc:C5 ;
+        sdh-slc:P1 ?actor ;
+        sdh-slc:P63 ?role .
 
+    ?actor sdh-short:P9 ?actorLabel .
+    ?role sdh-short:P9 ?roleLabel .
 }
 
 ```
 
-Question: What are the places where the study titles was obtained by a person?
+Question: What was the type of membership of an actor (person or group) during a membership?
 
 ``` sparql
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -100,20 +98,19 @@ PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?person_id ?person_label ?place_id ?place_label
+SELECT ?actor ?actorLabel ?role ?roleLabel
 WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-sls:P19 ?placce_id.
-?place_id sdh-short:P9 ?place_label.
+    ?membership a sdh-slc:C5 ;
+        sdh-slc:P1 ?actor ;
+        sdh-slc:P63 ?role .
 
+    ?actor sdh-short:P9 ?actorLabel .
+    ?role sdh-short:P9 ?roleLabel .
 }
 
 ```
 
-Question: What are the titles (type of diploma) of the study titles obtained by a person?
+Question: What was the dates (start date and end date) of the membership of an actor (person or group)?
 
 ``` sparql
 PREFIX owl: <http://www.w3.org/2002/07/owl#>
@@ -129,44 +126,14 @@ PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?person_id ?person_label ?title_id ?title_label
+SELECT ?actor ?actorLabel ?startDate ?endDate
 WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-sls:P10 ?title_id.
-?title_id sdh-short:P9 ?title_label.
+    ?membership a sdh-slc:C5 ;
+        sdh-slc:P1 ?actor ;
+        sdh-short:P4 ?startDate ;
+        sdh-short:P7 ?endDate .
 
-}
-
-```
-
-Question: Who are the supervisors of the study titles obtained by a person?
-
-``` sparql
-PREFIX owl: <http://www.w3.org/2002/07/owl#>
-PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>
-PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
-PREFIX skos: <http://www.w3.org/2004/02/skos/core#>
-PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
-PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
-PREFIX sdh: <https://sdhss.org/ontology/core/>
-PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
-PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
-PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
-PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
-
-SELECT ?person_id ?person_label ?supervisor_id ?supervisor_label
-WHERE {
-  
-?study_obtention a sdh-sls:C7.
-?study_obtention sdh-sls:P9 ?person_id.
-?person_id sdh-short:P9 ?person_label.
-?study_obtention sdh-sls:P11 ?supervisor_id.
-?supervisor_id sdh-short:P9 ?supervisor_label.
-
+    ?actor sdh-short:P9 ?actorLabel .
 }
 
 ```
