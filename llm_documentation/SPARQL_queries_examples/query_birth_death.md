@@ -72,8 +72,8 @@ PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 SELECT ?person ?personLabel ?deathDate
 WHERE {
     ?death a crm:E69 ;
-        crm:P98 ?person ;
-        sdh-short:P1 deathDate.
+        crm:P100 ?person ;
+        sdh-short:P1 ?deathDate.
 
     ?person sdh-short:P9 ?personLabel .
 }
@@ -98,8 +98,8 @@ PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
 SELECT ?person ?personLabel ?geoPlace ?geoPlaceLabel
 WHERE {
-    ?birth a crm:E69 ;
-        crm:P98 ?person ;
+    ?death a crm:E69 ;
+        crm:P100 ?person ;
         sdh:P6 ?geoPlace.
 
     ?person sdh-short:P9 ?personLabel .
