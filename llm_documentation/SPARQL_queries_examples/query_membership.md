@@ -9,7 +9,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX sdh: <https://sdhss.org/ontology/core/>
 PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
+PREFIX sdh-slc: <https://sdhss.org/ontology/social-life-core/>
 PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
@@ -37,7 +37,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX sdh: <https://sdhss.org/ontology/core/>
 PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
+PREFIX sdh-slc: <https://sdhss.org/ontology/social-life-core/>
 PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
@@ -65,7 +65,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX sdh: <https://sdhss.org/ontology/core/>
 PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
+PREFIX sdh-slc: <https://sdhss.org/ontology/social-life-core/>
 PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
@@ -93,19 +93,19 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX sdh: <https://sdhss.org/ontology/core/>
 PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
+PREFIX sdh-slc: <https://sdhss.org/ontology/social-life-core/>
 PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
 
-SELECT ?actor ?actorLabel ?role ?roleLabel
+SELECT ?actor ?actorLabel ?membershipType ?membershipTypeLabel
 WHERE {
     ?membership a sdh-slc:C5 ;
         sdh-slc:P1 ?actor ;
-        sdh-slc:P63 ?role .
+        sdh-slc:P3 ?membershipType .
 
     ?actor sdh-short:P9 ?actorLabel .
-    ?role sdh-short:P9 ?roleLabel .
+    ?membershipType sdh-short:P9 ?membershipTypeLabel .
 }
 
 ```
@@ -121,7 +121,7 @@ PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 PREFIX crm: <http://www.cidoc-crm.org/cidoc-crm/>
 PREFIX sdh: <https://sdhss.org/ontology/core/>
 PREFIX crm-sup: <https://sdhss.org/ontology/crm-supplement/>
-PREFIX sdh-slc: <https://sdhss.org/ontology/social-life/>
+PREFIX sdh-slc: <https://sdhss.org/ontology/social-life-core/>
 PREFIX sdh-short: <https://sdhss.org/ontology/shortcuts/>
 PREFIX sdh-info: <https://sdhss.org/ontology/sources-information-metadata/>
 PREFIX sdh-sls: <https://sdhss.org/ontology/social-life-specific/>
