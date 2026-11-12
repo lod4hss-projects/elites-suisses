@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Visualisations · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/charts.js"></script>
+</head>
+<body data-section="visualisations.html" data-title-key="nav.viz">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="viz.eyebrow"></p>
+      <h1 data-i18n="viz.title"></h1>
+      <p data-i18n="viz.lead"></p>
+      <nav class="viz-nav" aria-label="Charts">
+        <a href="#composition" data-i18n="viz.comp.t"></a>
+        <a href="#women" data-i18n="viz.women.t"></a>
+        <a href="#generations" data-i18n="viz.gen.t"></a>
+        <a href="#birthplaces" data-i18n="viz.map.t"></a>
+        <a href="#education" data-i18n="viz.edu.t"></a>
+        <a href="#organisations" data-i18n="viz.orgs.t"></a>
+      </nav>
+    </div>
+  </section>
+
+  <section class="section alt">
+    <div class="container">
+
+      <article class="viz" id="composition">
+        <div class="viz-head">
+          <div><p class="eyebrow">01</p><h2 data-i18n="viz.comp.t"></h2><p data-i18n="viz.comp.d"></p></div>
+          <div class="controls"><div class="seg" id="compMode">
+            <button type="button" data-v="abs" aria-pressed="true" data-i18n="common.absolute"></button>
+            <button type="button" data-v="pct" aria-pressed="false" data-i18n="common.percent"></button></div></div>
+        </div>
+        <div class="chart" id="compChart"></div>
+        <div class="legend"><span><i style="background:var(--men)"></i><span data-i18n="common.men"></span></span><span><i style="background:var(--women)"></i><span data-i18n="common.women"></span></span><span><i style="background:#b9c2cc"></i><span data-i18n="common.unknown"></span></span></div>
+        <div id="compQuery"></div>
+      </article>
+
+      <article class="viz" id="women">
+        <div class="viz-head">
+          <div><p class="eyebrow">02</p><h2 data-i18n="viz.women.t"></h2><p data-i18n="viz.women.d"></p></div>
+        </div>
+        <div class="chart" id="womenChart"></div>
+        <div class="legend" id="womenLegend"></div>
+        <p class="note" data-i18n="viz.note.coverage"></p>
+        <div id="womenQuery"></div>
+      </article>
+
+      <article class="viz" id="generations">
+        <div class="viz-head">
+          <div><p class="eyebrow">03</p><h2 data-i18n="viz.gen.t"></h2><p data-i18n="viz.gen.d"></p></div>
+          <div class="controls"><div class="seg" id="genMode">
+            <button type="button" data-v="abs" aria-pressed="true" data-i18n="common.absolute"></button>
+            <button type="button" data-v="pct" aria-pressed="false" data-i18n="common.percent"></button></div></div>
+        </div>
+        <div class="chart" id="genChart"></div>
+        <div class="legend"><span><i style="background:var(--men)"></i><span data-i18n="common.men"></span></span><span><i style="background:var(--women)"></i><span data-i18n="common.women"></span></span><span><i style="background:#b9c2cc"></i><span data-i18n="common.unknown"></span></span></div>
+        <div id="genQuery"></div>
+      </article>
+
+      <article class="viz" id="birthplaces">
+        <div class="viz-head">
+          <div><p class="eyebrow">04</p><h2 data-i18n="viz.map.t"></h2><p data-i18n="viz.map.d"></p></div>
+          <div class="controls">
+            <label for="mapGen" class="visually-hidden" data-i18n="viz.gen.t"></label>
+            <input type="range" id="mapGen" min="0" max="0" value="0" style="width:200px">
+            <strong id="mapGenLabel" style="min-width:9ch"></strong>
+          </div>
+        </div>
+        <div class="map" id="map"></div>
+        <div id="mapQuery"></div>
+      </article>
+
+      <article class="viz" id="education">
+        <div class="viz-head">
+          <div><p class="eyebrow">05</p><h2 data-i18n="viz.edu.t"></h2><p data-i18n="viz.edu.d"></p></div>
+          <div class="controls">
+            <div class="seg" id="eduMode">
+              <button type="button" data-v="disc" aria-pressed="true" data-i18n="viz.edu.disc"></button>
+              <button type="button" data-v="inst" aria-pressed="false" data-i18n="viz.edu.inst"></button></div>
+            <label for="eduDegree" class="visually-hidden" data-i18n="viz.edu.degree"></label>
+            <select id="eduDegree"></select>
+          </div>
+        </div>
+        <div class="chart" id="eduChart"></div>
+        <div id="eduQuery"></div>
+      </article>
+
+      <article class="viz" id="organisations">
+        <div class="viz-head">
+          <div><p class="eyebrow">06</p><h2 data-i18n="viz.orgs.t"></h2><p data-i18n="viz.orgs.d"></p></div>
+        </div>
+        <div class="chart" id="orgChart"></div>
+        <div id="orgQuery"></div>
+      </article>
+
+    </div>
+  </section>
+</main>
+
+<script>
+/* ======================= queries ======================= */
+const Q = {
+  comp: `
+# Persons with at least one membership covering the reference year, by gender
+SELECT ?year ?gender (COUNT(DISTINCT ?person) AS ?n) WHERE {
+  VALUES ?year { 1890 1910 1937 1957 1980 2000 2010 2015 2020 }
+  ?m sdh-slc:P1 ?person ; sdh-short:P4 ?start ; sdh-short:P7 ?end .
+  FILTER(?start <= ?year && ?end >= ?year)
+  OPTIONAL { ?person sdh-slc:P23 ?gender }
+}
+GROUP BY ?year ?gender
+ORDER BY ?year`,
+
+  women: `
+# Members of political bodies active in each reference year, and how many are women
+# es:g-ty5 Federal Council · es:g-ty4 Federal Parliament · es:g-ty1 cantonal governments · es:g-ty3 cantonal parliaments
+SELECT ?type ?year (COUNT(DISTINCT ?person) AS ?n) (COUNT(DISTINCT ?woman) AS ?women) WHERE {
+  VALUES ?type { es:g-ty1 es:g-ty3 es:g-ty4 es:g-ty5 }
+  VALUES ?year { 1890 1910 1937 1957 1980 2000 2010 2015 2020 }
+  ?body sdh:P99 ?type .
+  ?m sdh-slc:P2 ?body ; sdh-slc:P1 ?person ; sdh-short:P4 ?start ; sdh-short:P7 ?end .
+  FILTER(?start <= ?year && ?end >= ?year)
+  OPTIONAL { ?person sdh-slc:P23 es:gen1 . BIND(?person AS ?woman) }
+}
+GROUP BY ?type ?year
+ORDER BY ?type ?year`,
+
+  gen: `
+# Persons by 25-year birth cohort and gender
+SELECT ?generation ?gender (COUNT(?person) AS ?n) WHERE {
+  ?person a crm:E21 ; sdh-short:P2 ?birth .
+  FILTER(?birth > 0)
+  BIND(IF(?birth < 1801, 1775, IF(?birth > 1975, 1976, 1801 + 25 * FLOOR((?birth - 1801) / 25))) AS ?generation)
+  OPTIONAL { ?person sdh-slc:P23 ?gender }
+}
+GROUP BY ?generation ?gender
+ORDER BY ?generation`,
+
+  map: `
+# Birthplaces with coordinates, by generation of the persons born there
+SELECT ?place ?label ?point ?generation (COUNT(?person) AS ?n) WHERE {
+  ?birth a crm:E67 ; crm:P98 ?person ; sdh:P6 ?place .
+  ?place sdh-short:P9 ?label ; sdh-short:P14 ?point .
+  ?person sdh-short:P2 ?year .
+  FILTER(?year > 0)
+  BIND(IF(?year < 1801, 1775, IF(?year > 1975, 1976, 1801 + 25 * FLOOR((?year - 1801) / 25))) AS ?generation)
+}
+GROUP BY ?place ?label ?point ?generation`,
+
+  degrees: `
+SELECT ?degree ?label (COUNT(?e) AS ?n) WHERE {
+  ?e a sdh-sls:C7 ; sdh-sls:P10 ?degree .
+  ?degree sdh-short:P9 ?label .
+}
+GROUP BY ?degree ?label
+ORDER BY DESC(?n)
+LIMIT 12`,
+
+  disc: (deg) => `
+# Most frequent disciplines of degrees${deg ? ' (filtered by degree)' : ''}
+SELECT ?discipline ?label (COUNT(?e) AS ?n) WHERE {
+  ?e a sdh-sls:C7 ; sdh-sls:P25 ?discipline .${deg ? `\n  ?e sdh-sls:P10 <${deg}> .` : ''}
+  ?discipline sdh-short:P9 ?label .
+}
+GROUP BY ?discipline ?label
+ORDER BY DESC(?n)
+LIMIT 18`,
+
+  inst: (deg) => `
+# Institutions where most degrees were obtained${deg ? ' (filtered by degree)' : ''}
+SELECT ?institution ?label (COUNT(?e) AS ?n) WHERE {
+  ?e a sdh-sls:C7 ; sdh-sls:P17 ?institution .${deg ? `\n  ?e sdh-sls:P10 <${deg}> .` : ''}
+  ?institution sdh-short:P9 ?label .
+}
+GROUP BY ?institution ?label
+ORDER BY DESC(?n)
+LIMIT 18`,
+
+  orgs: `
+# Organisations with the most recorded memberships
+SELECT ?org ?label (COUNT(?m) AS ?n) WHERE {
+  ?m sdh-slc:P2 ?org .
+  ?org sdh-short:P9 ?label .
+}
+GROUP BY ?org ?label
+ORDER BY DESC(?n)
+LIMIT 20`,
+};
+
+/* ======================= helpers ======================= */
+const genderKey = (g) => !g ? 'unknown' : (ES.isWoman(g) ? 'women' : 'men');
+const genLabel = (g) => { g = Math.round(+g); return g === 1775 ? '≤ 1800' : g === 1976 ? '≥ 1976' : `${g}–${g + 24}`; };
+const labels = () => ({ men: ES.t('common.men'), women: ES.t('common.women'), unknown: ES.t('common.unknown') });
+function seg(id, onChange) {
+  const el = document.getElementById(id);
+  el.querySelectorAll('button').forEach(b => b.addEventListener('click', () => {
+    el.querySelectorAll('button').forEach(x => x.setAttribute('aria-pressed', String(x === b)));
+    onChange(b.dataset.v);
+  }));
+  return () => el.querySelector('[aria-pressed="true"]').dataset.v;
+}
+const state = {};
+
+/* ======================= 1 composition ======================= */
+function drawComp() {
+  const el = document.getElementById('compChart');
+  if (!state.comp) return;
+  const by = {};
+  state.comp.forEach(r => { (by[r.year] ||= { men: 0, women: 0, unknown: 0 })[genderKey(r.gender)] += +r.n; });
+  const data = Object.keys(by).sort().map(y => ({ key: y, values: by[y] }));
+  ES.charts.stacked(el, data, ['men', 'women', 'unknown'], { percent: state.compMode() === 'pct', labels: labels() });
+}
+
+/* ======================= 2 women ======================= */
+const TYPE_COLORS = { 5: '#d6002b', 4: '#25415d', 1: '#37b5b8', 3: '#c2559f' };
+function drawWomen() {
+  const el = document.getElementById('womenChart');
+  if (!state.women) return;
+  const byType = {};
+  state.women.forEach(r => { (byType[ES.typeNo(r.type)] ||= []).push(r); });
+  const series = ['5', '4', '1', '3'].filter(t => byType[t]).map(t => ({
+    name: ES.t('type.' + t), color: TYPE_COLORS[t],
+    points: byType[t].map(r => ({ x: +r.year, y: +r.n ? +r.women / +r.n * 100 : 0, tip: `${ES.fmt(r.women)} / ${ES.fmt(r.n)} (${(+r.n ? +r.women / +r.n * 100 : 0).toFixed(1)} %)` })),
+  }));
+  ES.charts.lines(el, series, { yMax: 50, yFormat: v => v + ' %', marker: { x: 1971, label: '1971' } });
+  document.getElementById('womenLegend').innerHTML = series.map(s => `<span><i style="background:${s.color}"></i>${s.name}</span>`).join('');
+}
+
+/* ======================= 3 generations ======================= */
+function drawGen() {
+  const el = document.getElementById('genChart');
+  if (!state.gen) return;
+  const by = {};
+  state.gen.forEach(r => { const g = Math.round(+r.generation); (by[g] ||= { men: 0, women: 0, unknown: 0 })[genderKey(r.gender)] += +r.n; });
+  const data = Object.keys(by).map(Number).sort((a, b) => a - b).map(g => ({ key: genLabel(g), values: by[g] }));
+  ES.charts.stacked(el, data, ['men', 'women', 'unknown'], { percent: state.genMode() === 'pct', labels: labels(), margin: { top: 20, right: 20, bottom: 40, left: 56 } });
+}
+
+/* ======================= 4 map ======================= */
+let map, layer;
+function initMap() {
+  map = L.map('map', { scrollWheelZoom: false }).setView([46.8, 8.2], 7);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+    maxZoom: 18, className: 'muted-tiles',
+  }).addTo(map);
+  layer = L.layerGroup().addTo(map);
+}
+function drawMap() {
+  if (!state.map || !map) return;
+  const gens = state.mapGens;
+  const idx = +document.getElementById('mapGen').value;
+  const sel = idx === 0 ? null : gens[idx - 1];
+  document.getElementById('mapGenLabel').textContent = sel === null ? ES.t('viz.map.allGen') : genLabel(sel);
+  const places = {};
+  state.map.forEach(r => {
+    if (sel !== null && Math.round(+r.generation) !== sel) return;
+    const p = places[r.place] ||= { label: r.label, point: r.point, n: 0 };
+    p.n += +r.n;
+  });
+  layer.clearLayers();
+  const max = Math.max(1, ...Object.values(places).map(p => p.n));
+  Object.values(places).sort((a, b) => b.n - a.n).forEach(p => {
+    const m = p.point.match(/POINT\(\s*([-\d.]+)\s+([-\d.]+)\s*\)/i);
+    if (!m) return;
+    L.circleMarker([+m[2], +m[1]], {
+      radius: 3 + 22 * Math.sqrt(p.n / max), color: '#25415d', weight: 1, fillColor: '#c2559f', fillOpacity: .55,
+    }).bindTooltip(`<b>${ES.esc(p.label)}</b><br>${ES.fmt(p.n)} ${ES.t('common.persons')}`).addTo(layer);
+  });
+}
+
+/* ======================= 5 education ======================= */
+async function drawEdu() {
+  const el = document.getElementById('eduChart');
+  const mode = state.eduMode(), deg = document.getElementById('eduDegree').value || null;
+  const body = mode === 'disc' ? Q.disc(deg) : Q.inst(deg);
+  ES.queryBox(document.getElementById('eduQuery'), body);
+  ES.loading(el);
+  try {
+    const rows = await ES.sparql(body);
+    if (!rows.length) { el.innerHTML = `<div class="status">${ES.t('common.noresults')}</div>`; return; }
+    ES.charts.hbar(el, rows.map(r => ({
+      label: r.label, value: +r.n,
+      href: mode === 'inst' ? ES.href('organisation.html?id=' + encodeURIComponent(ES.localId(r.institution))) : null,
+    })), { color: mode === 'disc' ? '#37b5b8' : '#426f9a' });
+  } catch (e) { ES.fail(el, e); }
+}
+function fillDegrees() {
+  const s = document.getElementById('eduDegree'), cur = s.value;
+  s.innerHTML = `<option value="">${ES.t('viz.edu.degree')}: ${ES.t('common.all')}</option>` +
+    (state.degrees || []).map(d => `<option value="${ES.esc(d.degree)}">${ES.esc(d.label)} (${ES.fmt(d.n)})</option>`).join('');
+  s.value = cur;
+}
+
+/* ======================= 6 organisations ======================= */
+function drawOrgs() {
+  const el = document.getElementById('orgChart');
+  if (!state.orgs) return;
+  ES.charts.hbar(el, state.orgs.map(r => ({ label: r.label, value: +r.n, href: ES.href('organisation.html?id=' + encodeURIComponent(ES.localId(r.org))) })));
+}
+
+/* ======================= wiring ======================= */
+function queryBoxes() {
+  ES.queryBox(document.getElementById('compQuery'), Q.comp);
+  ES.queryBox(document.getElementById('womenQuery'), Q.women);
+  ES.queryBox(document.getElementById('genQuery'), Q.gen);
+  ES.queryBox(document.getElementById('mapQuery'), Q.map);
+  ES.queryBox(document.getElementById('orgQuery'), Q.orgs);
+}
+
+function load(key, query, elId, draw) {
+  const el = document.getElementById(elId);
+  ES.loading(el);
+  return ES.sparql(query).then(r => { state[key] = r; draw(); }).catch(e => ES.fail(el, e));
+}
+
+ES.init(() => {
+  state.compMode = seg('compMode', drawComp);
+  state.genMode = seg('genMode', drawGen);
+  state.eduMode = seg('eduMode', drawEdu);
+  document.getElementById('eduDegree').addEventListener('change', drawEdu);
+  queryBoxes();
+  initMap();
+
+  load('comp', Q.comp, 'compChart', drawComp);
+  load('women', Q.women, 'womenChart', drawWomen);
+  load('gen', Q.gen, 'genChart', drawGen);
+  load('orgs', Q.orgs, 'orgChart', drawOrgs);
+  ES.sparql(Q.map).then(r => {
+    state.map = r;
+    state.mapGens = [...new Set(r.map(x => Math.round(+x.generation)))].sort((a, b) => a - b);
+    const s = document.getElementById('mapGen');
+    s.max = state.mapGens.length; s.addEventListener('input', drawMap);
+    drawMap();
+  }).catch(e => ES.fail(document.getElementById('map'), e));
+  ES.sparql(Q.degrees).then(r => { state.degrees = r; fillDegrees(); }).catch(() => {});
+  fillDegrees();
+  drawEdu();
+
+  document.addEventListener('es:lang', () => {
+    queryBoxes(); drawComp(); drawWomen(); drawGen(); drawMap(); drawOrgs(); fillDegrees(); drawEdu();
+  });
+  ES.onResize(() => { drawComp(); drawWomen(); drawGen(); drawOrgs(); drawEdu(); });
+});
+</script>
+</body>
+</html>

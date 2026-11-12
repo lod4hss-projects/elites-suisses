@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Persons · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+</head>
+<body data-section="persons.html" data-title-key="nav.persons">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="persons.eyebrow"></p>
+      <h1 data-i18n="persons.title"></h1>
+      <p data-i18n="persons.lead"></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <form class="toolbar" id="filters" role="search">
+        <input class="grow" type="search" id="q" data-i18n-attr="placeholder:persons.searchPh;aria-label:persons.searchPh">
+        <select id="g" data-i18n-attr="aria-label:persons.gender">
+          <option value="" data-i18n="persons.gender"></option>
+          <option value="gen1" data-i18n="common.women"></option>
+          <option value="gen2" data-i18n="common.men"></option>
+        </select>
+        <input type="number" id="from" min="1500" max="2010" style="width:9.5em" data-i18n-attr="placeholder:persons.from;aria-label:persons.from">
+        <input type="number" id="to" min="1500" max="2010" style="width:7em" data-i18n-attr="placeholder:persons.to;aria-label:persons.to">
+        <select id="sort" data-i18n-attr="aria-label:persons.sort">
+          <option value="name" data-i18n="persons.sortName"></option>
+          <option value="birth" data-i18n="persons.sortBirth"></option>
+          <option value="mand" data-i18n="persons.sortMand"></option>
+        </select>
+      </form>
+      <div id="results"></div>
+      <div class="pager" id="pager"></div>
+      <div id="query"></div>
+    </div>
+  </section>
+</main>
+<script>
+const PAGE = 25;
+const st = { q: '', g: '', from: '', to: '', sort: 'name', page: 1 };
+
+function whereClause() {
+  const w = [`?person a crm:E21 ; sdh-short:P9 ?name .`];
+  if (st.q) w.push(`FILTER(CONTAINS(LCASE(STR(?name)), LCASE("${ES.lit(st.q)}")))`);
+  if (st.g) w.push(`?person sdh-slc:P23 es:${st.g} .`);
+  const yf = /^\d{3,4}$/.test(st.from), yt = /^\d{3,4}$/.test(st.to);
+  if (yf || yt) {
+    w.push(`?person sdh-short:P2 ?birthF .`);
+    if (yf) w.push(`FILTER(?birthF >= ${+st.from})`);
+    if (yt) w.push(`FILTER(?birthF <= ${+st.to})`);
+  }
+  return w.map(l => '  ' + l).join('\n');
+}
+function listQuery() {
+  const order = { name: 'ASC(LCASE(STR(?name)))', birth: 'ASC(?birth) ASC(?name)', mand: 'DESC(?mandates) ASC(?name)' }[st.sort];
+  return `
+SELECT ?person ?name ?birth ?death ?gender (COUNT(DISTINCT ?m) AS ?mandates) (SAMPLE(?wd) AS ?wikidata) WHERE {
+${whereClause()}
+  OPTIONAL { ?person sdh-short:P2 ?birth }
+  OPTIONAL { ?person sdh-short:P13 ?death }
+  OPTIONAL { ?person sdh-slc:P23 ?gender }
+  OPTIONAL { ?m sdh-slc:P1 ?person }
+  OPTIONAL { ?person owl:sameAs ?wd }
+}
+GROUP BY ?person ?name ?birth ?death ?gender
+ORDER BY ${order}
+LIMIT ${PAGE} OFFSET ${(st.page - 1) * PAGE}`;
+}
+const countQuery = () => `
+SELECT (COUNT(?person) AS ?total) WHERE {
+${whereClause()}
+}`;
+
+let rows = null, total = null, reqId = 0;
+
+function render() {
+  const el = document.getElementById('results'), pg = document.getElementById('pager');
+  ES.queryBox(document.getElementById('query'), listQuery());
+  if (!rows) return;
+  if (!rows.length) { el.innerHTML = `<div class="status">${ES.t('common.noresults')}</div>`; pg.innerHTML = ''; return; }
+  el.innerHTML = `<div class="table-wrap"><table class="data"><thead><tr>
+    <th>${ES.t('col.name')}</th><th>${ES.t('col.life')}</th><th>${ES.t('col.gender')}</th>
+    <th style="text-align:right">${ES.t('col.mandates')}</th><th>${ES.t('col.links')}</th></tr></thead><tbody>
+    ${rows.map(r => {
+      const unil = ES.unilUrl(r.person);
+      return `<tr><td>${ES.personLink(r.person, r.name)}</td><td>${ES.life(r.birth, r.death)}</td><td>${ES.genderPill(r.gender)}</td>
+        <td class="num">${ES.fmt(r.mandates)}</td>
+        <td>${r.wikidata ? `<a class="pill wd" href="${ES.esc(r.wikidata)}" target="_blank" rel="noopener">Wikidata</a> ` : ''}${unil ? `<a class="pill" href="${unil}" target="_blank" rel="noopener">UNIL</a>` : ''}</td></tr>`;
+    }).join('')}</tbody></table></div>`;
+  const pages = total ? Math.max(1, Math.ceil(total / PAGE)) : null;
+  pg.innerHTML = `<span>${total !== null ? ES.t('common.results', { n: ES.fmt(total) }) + ' · ' : ''}${pages ? ES.t('common.page', { p: st.page, n: ES.fmt(pages) }) : ''}</span>
+    <span class="btn-row"><button class="btn btn-sm" id="prev" ${st.page <= 1 ? 'disabled' : ''}>${ES.t('common.prev')}</button>
+    <button class="btn btn-sm" id="next" ${(pages && st.page >= pages) || rows.length < PAGE ? 'disabled' : ''}>${ES.t('common.next')}</button></span>`;
+  pg.querySelector('#prev').onclick = () => { st.page--; run(false); scrollTo({ top: 0, behavior: 'smooth' }); };
+  pg.querySelector('#next').onclick = () => { st.page++; run(false); scrollTo({ top: 0, behavior: 'smooth' }); };
+}
+
+function syncUrl() {
+  const u = new URL(location.href);
+  ['q', 'g', 'from', 'to', 'sort', 'page'].forEach(k => {
+    const v = st[k];
+    if (v && !(k === 'sort' && v === 'name') && !(k === 'page' && v === 1)) u.searchParams.set(k, v); else u.searchParams.delete(k);
+  });
+  history.replaceState(null, '', u);
+}
+
+async function run(recount = true) {
+  const id = ++reqId, el = document.getElementById('results');
+  syncUrl();
+  ES.loading(el);
+  if (recount) total = null;
+  try {
+    const [r, c] = await Promise.all([ES.sparql(listQuery()), recount ? ES.sparql(countQuery()) : Promise.resolve(null)]);
+    if (id !== reqId) return;
+    rows = r; if (c) total = +c[0].total;
+    render();
+  } catch (e) { if (id === reqId) ES.fail(el, e); }
+}
+
+ES.init(() => {
+  const p = new URLSearchParams(location.search);
+  ['q', 'g', 'from', 'to', 'sort'].forEach(k => { if (p.get(k)) { st[k] = p.get(k); document.getElementById(k).value = st[k]; } });
+  st.page = Math.max(1, parseInt(p.get('page') || '1', 10) || 1);
+  const upd = ES.debounce(() => {
+    ['q', 'g', 'from', 'to', 'sort'].forEach(k => st[k] = document.getElementById(k).value.trim());
+    st.page = 1; run();
+  }, 350);
+  document.getElementById('filters').addEventListener('input', upd);
+  document.getElementById('filters').addEventListener('submit', e => { e.preventDefault(); upd(); });
+  document.addEventListener('es:lang', render);
+  run();
+});
+</script>
+</body>
+</html>

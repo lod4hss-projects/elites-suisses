@@ -1,49 +1,177 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="en">
 <head>
-    <title>elites_suisses</title>
-    <style>
-        body {
-            background-color: rgb(226, 231, 235);
-        }
-
-        h1 {
-            color: rgb(22, 60, 109);
-            font-family: Arial, Helvetica, sans-serif;
-        }
-        h2 {
-            color: rgb(34, 108, 205);
-            font-family: Arial, Helvetica, sans-serif;
-        }
-
-    </style>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Swiss Elites</title>
+  <meta name="description" content="Swiss Elites – Linked Open Data interface to the Swiss elites database (OBELIS, UNIL). Political, economic, administrative and academic elites in Switzerland, 1890–2020.">
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://api.fontshare.com">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
 </head>
+<body data-section="index.html">
+<main id="main">
 
-<body>
-    <h1>LESSH Project</h1>
+  <section class="hero">
+    <svg class="hero-net" id="heroNet" viewBox="0 0 600 420" aria-hidden="true"></svg>
+    <div class="container">
+      <p class="eyebrow" data-i18n="home.eyebrow"></p>
+      <h1 data-i18n="home.title"></h1>
+      <p class="lead" data-i18n="home.lead"></p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="persons.html" data-nav data-i18n="home.ctaPersons"></a>
+        <a class="btn" href="visualisations.html" data-nav data-i18n="home.ctaViz"></a>
+      </div>
+      <form class="search-box" action="persons.html" role="search">
+        <input type="search" name="q" data-i18n-attr="placeholder:home.searchPh;aria-label:common.search">
+        <input type="hidden" name="lang" id="langField">
+        <button class="btn btn-primary" type="submit" data-i18n="common.search"></button>
+      </form>
+    </div>
+  </section>
 
-    Experimental website
+  <section class="section">
+    <div class="container">
+      <div class="kpis" id="kpis" aria-live="polite">
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.persons"></div><div class="kpi-value" data-k="persons">…</div></div>
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.women"></div><div class="kpi-value" data-k="women">…</div></div>
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.orgs"></div><div class="kpi-value" data-k="orgs">…</div></div>
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.memberships"></div><div class="kpi-value" data-k="memb">…</div></div>
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.education"></div><div class="kpi-value" data-k="edu">…</div></div>
+        <div class="kpi"><div class="kpi-label" data-i18n="kpi.wikidata"></div><div class="kpi-value" data-k="wd">…</div></div>
+      </div>
+      <div id="kpiQuery"></div>
+    </div>
+  </section>
 
+  <section class="section alt">
+    <div class="container">
+      <div class="section-head">
+        <div>
+          <p class="eyebrow" data-i18n="home.yearsEyebrow"></p>
+          <h2 data-i18n="home.yearsTitle"></h2>
+          <p data-i18n="home.yearsText"></p>
+        </div>
+        <div class="legend"><span><i style="background:var(--men)"></i><span data-i18n="common.men"></span></span><span><i style="background:var(--women)"></i><span data-i18n="common.women"></span></span></div>
+      </div>
+      <div class="years" id="years"></div>
+      <div id="yearsQuery"></div>
+    </div>
+  </section>
 
+  <section class="section">
+    <div class="container">
+      <p class="eyebrow" data-i18n="home.exploreEyebrow"></p>
+      <h2 data-i18n="home.exploreTitle"></h2>
+      <div class="cards">
+        <a class="card" href="persons.html" data-nav>
+          <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></div>
+          <h3 data-i18n="home.card1.t"></h3><p data-i18n="home.card1.d"></p></a>
+        <a class="card" href="organisations.html" data-nav>
+          <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M3 21h18M5 21V9l7-5 7 5v12M9 21v-6h6v6"/></svg></div>
+          <h3 data-i18n="home.card2.t"></h3><p data-i18n="home.card2.d"></p></a>
+        <a class="card" href="visualisations.html" data-nav>
+          <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg></div>
+          <h3 data-i18n="home.card3.t"></h3><p data-i18n="home.card3.d"></p></a>
+        <a class="card" href="description.html" data-nav>
+          <div class="icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M6 3h9l4 4v14H6z"/><path d="M14 3v5h5M9 13h7M9 17h7"/></svg></div>
+          <h3 data-i18n="home.card4.t"></h3><p data-i18n="home.card4.d"></p></a>
+      </div>
+    </div>
+  </section>
 
-<br/>
-<br/>
-    <h2>SPARQL Live Queries</h2>
+  <section class="section alt">
+    <div class="container">
+      <p class="eyebrow" data-i18n="home.lodEyebrow"></p>
+      <h2 data-i18n="home.lodTitle"></h2>
+      <p class="prose" data-i18n="home.lodText"></p>
+    </div>
+  </section>
+</main>
 
+<script>
+const KPI_Q = `
+SELECT ?persons ?women ?orgs ?memb ?edu ?wd WHERE {
+  { SELECT (COUNT(?p) AS ?persons) WHERE { ?p a crm:E21 } }
+  { SELECT (COUNT(?p) AS ?women) WHERE { ?p a crm:E21 ; sdh-slc:P23 es:gen1 } }
+  { SELECT (COUNT(?o) AS ?orgs) WHERE { ?o a crm:E74 } }
+  { SELECT (COUNT(?m) AS ?memb) WHERE { ?m a sdh-slc:C5 } }
+  { SELECT (COUNT(?e) AS ?edu) WHERE { ?e a sdh-sls:C7 } }
+  { SELECT (COUNT(DISTINCT ?p) AS ?wd) WHERE { ?p a crm:E21 ; owl:sameAs ?w } }
+}`;
 
-    <ul>
-        <li><a href="./sparql-queries/persons-table.html">Persons (with search)</a></li>
-        <li><a href="./sparql-queries/groups-table.html">Organisations (with search)</a></li>
-    </ul>
+const YEARS_Q = `
+# Persons with at least one membership covering the reference year, by gender
+SELECT ?year ?gender (COUNT(DISTINCT ?person) AS ?n) WHERE {
+  VALUES ?year { 1890 1910 1937 1957 1980 2000 2010 2015 2020 }
+  ?m sdh-slc:P1 ?person ; sdh-short:P4 ?start ; sdh-short:P7 ?end .
+  FILTER(?start <= ?year && ?end >= ?year)
+  OPTIONAL { ?person sdh-slc:P23 ?gender }
+}
+GROUP BY ?year ?gender
+ORDER BY ?year`;
 
-    <ul>    
-        <li><a href="./sparql-queries/generations.html">Distribution by Generation</a></li>
-        <li><a href="./sparql-queries/birth_places.html">Birth Places over Time</a></li>
-        
-    </ul>
+let yearsData = null;
 
+function renderYears() {
+  const el = document.getElementById('years');
+  if (!yearsData) return;
+  const by = d3group(yearsData);
+  el.innerHTML = Object.keys(by).sort().map(y => {
+    const r = by[y], tot = r.m + r.w + r.u, wp = tot ? r.w / tot * 100 : 0;
+    return `<a class="year-card" href="${ES.href('visualisations.html')}#composition">
+      <div class="y">${y}</div>
+      <div class="n">${ES.fmt(tot)} ${ES.t('common.persons')}</div>
+      <div class="share-bar" aria-hidden="true"><span class="m" style="width:${100 - wp}%"></span><span class="w" style="width:${wp}%"></span></div>
+      <div class="w-share">${ES.t('home.womenShare', { p: wp.toFixed(1) })}</div></a>`;
+  }).join('');
+}
+function d3group(rows) {
+  const by = {};
+  rows.forEach(r => {
+    const o = by[r.year] ||= { m: 0, w: 0, u: 0 };
+    const n = +r.n;
+    if (!r.gender) o.u += n; else if (ES.isWoman(r.gender)) o.w += n; else o.m += n;
+  });
+  return by;
+}
 
+function heroNet() {
+  // decorative network motif (deterministic pseudo-random)
+  const svg = document.getElementById('heroNet');
+  let s = 7; const rnd = () => (s = (s * 9301 + 49297) % 233280) / 233280;
+  const cols = ['#94d2e1', '#e193d2', '#35516c', '#37b5b8', '#d6002b'];
+  const nodes = Array.from({ length: 34 }, (_, i) => ({ x: 80 + rnd() * 500, y: 20 + rnd() * 380, r: 2 + rnd() * 7, c: cols[i % 5] }));
+  let html = '';
+  nodes.forEach((a, i) => nodes.slice(i + 1).forEach(b => {
+    const d = Math.hypot(a.x - b.x, a.y - b.y);
+    if (d < 110) html += `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="#35516c" stroke-opacity="${(0.25 * (1 - d / 110)).toFixed(2)}"/>`;
+  }));
+  nodes.forEach(n => html += `<circle cx="${n.x}" cy="${n.y}" r="${n.r}" fill="${n.c}" fill-opacity="${n.c === '#d6002b' ? .8 : .55}"/>`);
+  svg.innerHTML = html;
+}
+
+ES.init(async () => {
+  heroNet();
+  const lf = document.getElementById('langField');
+  lf.value = ES.lang; document.addEventListener('es:lang', () => { lf.value = ES.lang; });
+
+  ES.queryBox(document.getElementById('kpiQuery'), KPI_Q);
+  ES.queryBox(document.getElementById('yearsQuery'), YEARS_Q);
+
+  let kpi = null;
+  const renderKpi = () => { if (kpi) document.querySelectorAll('[data-k]').forEach(el => el.textContent = ES.fmt(kpi[el.dataset.k])); };
+  document.addEventListener('es:lang', () => { renderKpi(); renderYears(); ES.queryBox(document.getElementById('kpiQuery'), KPI_Q); ES.queryBox(document.getElementById('yearsQuery'), YEARS_Q); });
+
+  ES.loading(document.getElementById('years'));
+  ES.sparql(KPI_Q).then(r => { kpi = r[0]; renderKpi(); })
+    .catch(e => document.querySelectorAll('[data-k]').forEach(el => el.textContent = '–'));
+  ES.sparql(YEARS_Q).then(r => { yearsData = r; renderYears(); })
+    .catch(e => ES.fail(document.getElementById('years'), e));
+});
+</script>
 </body>
-
 </html>

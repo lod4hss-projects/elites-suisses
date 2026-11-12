@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Organisations · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+</head>
+<body data-section="organisations.html" data-title-key="nav.orgs">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="orgs.eyebrow"></p>
+      <h1 data-i18n="orgs.title"></h1>
+      <p data-i18n="orgs.lead"></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container">
+      <form class="toolbar" id="filters" role="search">
+        <input class="grow" type="search" id="q" data-i18n-attr="placeholder:orgs.searchPh;aria-label:orgs.searchPh">
+        <select id="t" data-i18n-attr="aria-label:orgs.type">
+          <option value="" data-i18n="orgs.type"></option>
+          <option value="5" data-i18n="type.5"></option>
+          <option value="4" data-i18n="type.4"></option>
+          <option value="1" data-i18n="type.1"></option>
+          <option value="3" data-i18n="type.3"></option>
+          <option value="2" data-i18n="type.2"></option>
+          <option value="6" data-i18n="type.6"></option>
+          <option value="7" data-i18n="type.7"></option>
+          <option value="none" data-i18n="type.none"></option>
+        </select>
+      </form>
+      <div id="results"></div>
+      <div class="pager" id="pager"></div>
+      <div id="query"></div>
+    </div>
+  </section>
+</main>
+<script>
+const PAGE = 25;
+const st = { q: '', t: '', page: 1 };
+
+function whereClause() {
+  const w = [`?org a crm:E74 ; sdh-short:P9 ?label .`];
+  if (st.q) w.push(`FILTER(CONTAINS(LCASE(STR(?label)), LCASE("${ES.lit(st.q)}")))`);
+  if (/^\d$/.test(st.t)) w.push(`?org sdh:P99 es:g-ty${st.t} .`);
+  if (st.t === 'none') w.push(`FILTER NOT EXISTS { ?org sdh:P99 ?anyType }`);
+  return w.map(l => '  ' + l).join('\n');
+}
+const listQuery = () => `
+SELECT ?org ?label ?type (COUNT(DISTINCT ?m) AS ?memberships) WHERE {
+${whereClause()}
+  OPTIONAL { ?org sdh:P99 ?type }
+  OPTIONAL { ?m sdh-slc:P2 ?org }
+}
+GROUP BY ?org ?label ?type
+ORDER BY DESC(?memberships) ASC(?label)
+LIMIT ${PAGE} OFFSET ${(st.page - 1) * PAGE}`;
+const countQuery = () => `
+SELECT (COUNT(?org) AS ?total) WHERE {
+${whereClause()}
+}`;
+
+let rows = null, total = null, reqId = 0;
+
+function render() {
+  const el = document.getElementById('results'), pg = document.getElementById('pager');
+  ES.queryBox(document.getElementById('query'), listQuery());
+  if (!rows) return;
+  if (!rows.length) { el.innerHTML = `<div class="status">${ES.t('common.noresults')}</div>`; pg.innerHTML = ''; return; }
+  el.innerHTML = `<div class="table-wrap"><table class="data"><thead><tr>
+    <th>${ES.t('col.org')}</th><th>${ES.t('col.type')}</th><th style="text-align:right">${ES.t('col.members')}</th></tr></thead><tbody>
+    ${rows.map(r => `<tr><td>${ES.orgLink(r.org, r.label)}</td><td><span class="pill">${ES.typeLabel(r.type)}</span></td><td class="num">${ES.fmt(r.memberships)}</td></tr>`).join('')}
+    </tbody></table></div>`;
+  const pages = total ? Math.max(1, Math.ceil(total / PAGE)) : null;
+  pg.innerHTML = `<span>${total !== null ? ES.t('common.results', { n: ES.fmt(total) }) + ' · ' : ''}${pages ? ES.t('common.page', { p: st.page, n: ES.fmt(pages) }) : ''}</span>
+    <span class="btn-row"><button class="btn btn-sm" id="prev" ${st.page <= 1 ? 'disabled' : ''}>${ES.t('common.prev')}</button>
+    <button class="btn btn-sm" id="next" ${(pages && st.page >= pages) || rows.length < PAGE ? 'disabled' : ''}>${ES.t('common.next')}</button></span>`;
+  pg.querySelector('#prev').onclick = () => { st.page--; run(false); scrollTo({ top: 0, behavior: 'smooth' }); };
+  pg.querySelector('#next').onclick = () => { st.page++; run(false); scrollTo({ top: 0, behavior: 'smooth' }); };
+}
+
+function syncUrl() {
+  const u = new URL(location.href);
+  ['q', 't', 'page'].forEach(k => { const v = st[k]; if (v && !(k === 'page' && v === 1)) u.searchParams.set(k, v); else u.searchParams.delete(k); });
+  history.replaceState(null, '', u);
+}
+
+async function run(recount = true) {
+  const id = ++reqId, el = document.getElementById('results');
+  syncUrl(); ES.loading(el);
+  if (recount) total = null;
+  try {
+    const [r, c] = await Promise.all([ES.sparql(listQuery()), recount ? ES.sparql(countQuery()) : Promise.resolve(null)]);
+    if (id !== reqId) return;
+    rows = r; if (c) total = +c[0].total;
+    render();
+  } catch (e) { if (id === reqId) ES.fail(el, e); }
+}
+
+ES.init(() => {
+  const p = new URLSearchParams(location.search);
+  ['q', 't'].forEach(k => { if (p.get(k)) { st[k] = p.get(k); document.getElementById(k).value = st[k]; } });
+  st.page = Math.max(1, parseInt(p.get('page') || '1', 10) || 1);
+  const upd = ES.debounce(() => { st.q = document.getElementById('q').value.trim(); st.t = document.getElementById('t').value; st.page = 1; run(); }, 350);
+  document.getElementById('filters').addEventListener('input', upd);
+  document.getElementById('filters').addEventListener('submit', e => { e.preventDefault(); upd(); });
+  document.addEventListener('es:lang', render);
+  run();
+});
+</script>
+</body>
+</html>

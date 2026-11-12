@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Organisation · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/charts.js"></script>
+</head>
+<body data-section="organisations.html">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="org.eyebrow"></p>
+      <h1 id="oName">…</h1>
+      <p id="oSub"></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container" id="content"></div>
+  </section>
+</main>
+<script>
+const rawId = ES.param('id') || '';
+const ID = /^g\d+$/.test(rawId) ? rawId : null;
+const G = `es:${ID}`;
+const PAGE = 50;
+
+const Q = {
+  base: `
+SELECT ?label ?type ?note (COUNT(DISTINCT ?e) AS ?degrees) WHERE {
+  ${G} a crm:E74 ; sdh-short:P9 ?label .
+  OPTIONAL { ${G} sdh:P99 ?type }
+  OPTIONAL { ${G} sdh-short:P11 ?note }
+  OPTIONAL { ?e sdh-sls:P17 ${G} }
+}
+GROUP BY ?label ?type ?note`,
+  members: `
+SELECT ?person ?name ?gender ?start ?end WHERE {
+  ?m sdh-slc:P2 ${G} ; sdh-slc:P1 ?person .
+  OPTIONAL { ?m sdh-short:P4 ?start }
+  OPTIONAL { ?m sdh-short:P7 ?end }
+  ?person sdh-short:P9 ?name .
+  OPTIONAL { ?person sdh-slc:P23 ?gender }
+}
+ORDER BY ?start ?name`,
+};
+
+const D = {};
+const st = { filter: '', page: 1 };
+
+function drawChart() {
+  const el = document.getElementById('orgChart');
+  if (!el) return;
+  const ms = (D.members || []).filter(m => +m.start > 0);
+  if (ms.length < 3) { el.closest('.panel').style.display = 'none'; return; }
+  const lo = d3.min(ms, m => +m.start), hi = Math.min(new Date().getFullYear(), d3.max(ms, m => +(m.end || m.start)));
+  const men = [], women = [];
+  for (let y = lo; y <= hi; y++) {
+    let a = 0, b = 0;
+    ms.forEach(m => { if (+m.start <= y && +(m.end || m.start) >= y) { ES.isWoman(m.gender) ? b++ : a++; } });
+    men.push({ x: y, y: a, tip: `${ES.t('common.men')}: ${a}` });
+    women.push({ x: y, y: b, tip: `${ES.t('common.women')}: ${b}` });
+  }
+  ES.charts.lines(el, [
+    { name: ES.t('common.men'), color: ES.colors.men, points: men },
+    { name: ES.t('common.women'), color: ES.colors.women, points: women },
+  ], { height: 300 });
+  el.querySelectorAll('circle').forEach(c => c.setAttribute('r', hi - lo > 60 ? 0 : 3));
+}
+
+function renderMembers() {
+  const box = document.getElementById('members');
+  if (!box) return;
+  const f = st.filter.toLowerCase();
+  const all = (D.members || []).filter(m => !f || m.name.toLowerCase().includes(f));
+  const pages = Math.max(1, Math.ceil(all.length / PAGE));
+  st.page = Math.min(st.page, pages);
+  const rows = all.slice((st.page - 1) * PAGE, st.page * PAGE);
+  box.innerHTML = rows.length ? `<div class="table-wrap"><table class="data"><thead><tr>
+      <th>${ES.t('col.name')}</th><th>${ES.t('col.gender')}</th><th>${ES.t('col.from')}</th><th>${ES.t('col.to')}</th></tr></thead><tbody>
+      ${rows.map(m => `<tr><td>${ES.personLink(m.person, m.name)}</td><td>${ES.genderPill(m.gender)}</td><td class="num">${ES.year(m.start)}</td><td class="num">${ES.year(m.end)}</td></tr>`).join('')}
+    </tbody></table></div>
+    <div class="pager"><span>${ES.t('common.results', { n: ES.fmt(all.length) })} · ${ES.t('common.page', { p: st.page, n: pages })}</span>
+      <span class="btn-row"><button class="btn btn-sm" id="mprev" ${st.page <= 1 ? 'disabled' : ''}>${ES.t('common.prev')}</button>
+      <button class="btn btn-sm" id="mnext" ${st.page >= pages ? 'disabled' : ''}>${ES.t('common.next')}</button></span></div>`
+    : `<div class="status">${ES.t('common.noresults')}</div>`;
+  const pv = box.querySelector('#mprev'), nx = box.querySelector('#mnext');
+  if (pv) pv.onclick = () => { st.page--; renderMembers(); };
+  if (nx) nx.onclick = () => { st.page++; renderMembers(); };
+}
+
+function render() {
+  const c = document.getElementById('content');
+  if (!ID || (D.base && !D.base[0])) { c.innerHTML = `<div class="status error">${ES.t('org.notfound')}</div>`; return; }
+  if (!D.base) return;
+  const b = D.base[0], ms = D.members || [];
+  const women = ms.filter(m => ES.isWoman(m.gender)).length;
+  const persons = new Set(ms.map(m => m.person)).size;
+  document.title = b.label + ' · ' + ES.t('site.title');
+  document.getElementById('oName').textContent = b.label;
+  document.getElementById('oSub').innerHTML = `<span class="pill">${ES.typeLabel(b.type)}</span>`;
+  const note = b.note ? ES.esc(b.note).replace(/(https?:\/\/[^\s]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>') : '';
+
+  c.innerHTML = `<div class="kpis" style="margin-bottom:24px">
+      <div class="kpi"><div class="kpi-label">${ES.t('col.members')}</div><div class="kpi-value">${ES.fmt(ms.length)}</div></div>
+      <div class="kpi"><div class="kpi-label">${ES.t('kpi.persons')}</div><div class="kpi-value">${ES.fmt(persons)}</div></div>
+      <div class="kpi"><div class="kpi-label">${ES.t('kpi.women')}</div><div class="kpi-value">${ms.length ? (women / ms.length * 100).toFixed(1) : 0} %</div></div>
+      ${+b.degrees ? `<div class="kpi"><div class="kpi-label">${ES.t('kpi.education')}</div><div class="kpi-value">${ES.fmt(b.degrees)}</div></div>` : ''}
+    </div>
+    ${note ? `<p class="note" style="margin-bottom:20px">${note}</p>` : ''}
+    <div class="panel"><h2>${ES.t('org.over')}</h2><div class="chart" id="orgChart"></div>
+      <div class="legend"><span><i style="background:var(--men)"></i>${ES.t('common.men')}</span><span><i style="background:var(--women)"></i>${ES.t('common.women')}</span></div></div>
+    <div class="panel"><h2>${ES.t('org.members')}</h2>
+      <div class="toolbar"><input class="grow" type="search" id="mfilter" value="${ES.esc(st.filter)}" placeholder="${ES.t('org.filter')}" aria-label="${ES.t('org.filter')}"></div>
+      <div id="members"></div></div>
+    <div id="qbox"></div>`;
+  document.getElementById('mfilter').addEventListener('input', ES.debounce(e => { st.filter = e.target.value; st.page = 1; renderMembers(); }, 200));
+  drawChart();
+  renderMembers();
+  ES.queryBox(document.getElementById('qbox'), Q.members);
+}
+
+ES.init(async () => {
+  const c = document.getElementById('content');
+  if (!ID) { render(); return; }
+  ES.loading(c);
+  try {
+    const [b, m] = await Promise.all([ES.sparql(Q.base), ES.sparql(Q.members)]);
+    D.base = b; D.members = m;
+    render();
+  } catch (e) { ES.fail(c, e); }
+  document.addEventListener('es:lang', render);
+  ES.onResize(drawChart);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Person · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/7.9.0/d3.min.js"></script>
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+  <script src="assets/js/charts.js"></script>
+</head>
+<body data-section="persons.html">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="person.eyebrow"></p>
+      <h1 id="pName">…</h1>
+      <p id="pLife"></p>
+    </div>
+  </section>
+  <section class="section">
+    <div class="container" id="content"></div>
+  </section>
+</main>
+<script>
+const rawId = ES.param('id') || '';
+const ID = /^p\d+$/.test(rawId) ? rawId : null;
+const P = `es:${ID}`;
+
+const Q = {
+  base: `
+SELECT ?name ?birth ?death ?gender (GROUP_CONCAT(DISTINCT STR(?wd); separator=" ") AS ?wikidata) WHERE {
+  ${P} a crm:E21 ; sdh-short:P9 ?name .
+  OPTIONAL { ${P} sdh-short:P2 ?birth }
+  OPTIONAL { ${P} sdh-short:P13 ?death }
+  OPTIONAL { ${P} sdh-slc:P23 ?gender }
+  OPTIONAL { ${P} owl:sameAs ?wd }
+}
+GROUP BY ?name ?birth ?death ?gender`,
+  birth: `
+SELECT ?place ?placeLabel ?father ?fatherName ?mother ?motherName WHERE {
+  ?birth a crm:E67 ; crm:P98 ${P} .
+  OPTIONAL { ?birth sdh:P6 ?place . ?place sdh-short:P9 ?placeLabel }
+  OPTIONAL { ?birth crm:P97 ?father . ?father sdh-short:P9 ?fatherName }
+  OPTIONAL { ?birth crm:P96 ?mother . ?mother sdh-short:P9 ?motherName }
+}`,
+  children: `
+SELECT DISTINCT ?child ?name ?born WHERE {
+  ?birth crm:P98 ?child .
+  { ?birth crm:P97 ${P} } UNION { ?birth crm:P96 ${P} }
+  ?child sdh-short:P9 ?name .
+  OPTIONAL { ?child sdh-short:P2 ?born }
+}
+ORDER BY ?born`,
+  spouses: `
+SELECT DISTINCT ?spouse ?name WHERE {
+  ?marriage a sdh-slc:C3 ; sdh-slc:P15 ${P}, ?spouse .
+  FILTER(?spouse != ${P})
+  ?spouse sdh-short:P9 ?name .
+}`,
+  mandates: `
+SELECT ?org ?label ?type ?start ?end WHERE {
+  ?m sdh-slc:P1 ${P} ; sdh-slc:P2 ?org .
+  OPTIONAL { ?m sdh-short:P4 ?start }
+  OPTIONAL { ?m sdh-short:P7 ?end }
+  ?org sdh-short:P9 ?label .
+  OPTIONAL { ?org sdh:P99 ?type }
+}
+ORDER BY ?start ?label`,
+  education: `
+SELECT ?year ?degree ?discipline ?inst ?instLabel WHERE {
+  ?e a sdh-sls:C7 ; sdh-sls:P9 ${P} .
+  OPTIONAL { ?e sdh-short:P1 ?year }
+  OPTIONAL { ?e sdh-sls:P10/sdh-short:P9 ?degree }
+  OPTIONAL { ?e sdh-sls:P25/sdh-short:P9 ?discipline }
+  OPTIONAL { ?e sdh-sls:P17 ?inst . ?inst sdh-short:P9 ?instLabel }
+}
+ORDER BY ?year`,
+};
+
+const D = {};
+
+function table(cols, rows) {
+  return `<div class="table-wrap"><table class="data"><thead><tr>${cols.map(c => `<th>${c}</th>`).join('')}</tr></thead>
+    <tbody>${rows.map(r => `<tr>${r.map(c => `<td>${c}</td>`).join('')}</tr>`).join('')}</tbody></table></div>`;
+}
+
+function timeline(el, rows) {
+  const data = rows.filter(r => r.start && +r.start > 0);
+  if (!data.length) { el.innerHTML = ''; return; }
+  const rowH = 22, labelW = Math.min(260, (el.clientWidth || 700) * .38);
+  const width = Math.max(340, el.clientWidth || 700), height = data.length * rowH + 34;
+  el.innerHTML = '';
+  const svg = d3.select(el).append('svg').attr('viewBox', `0 0 ${width} ${height}`).attr('class', 'timeline');
+  const g = svg.append('g').attr('transform', `translate(${labelW},8)`);
+  const lo = d3.min(data, d => +d.start), hi = d3.max(data, d => +(d.end || d.start)) ;
+  const x = d3.scaleLinear().domain([lo - 1, Math.max(hi + 1, lo + 5)]).range([0, width - labelW - 16]);
+  g.append('g').attr('class', 'axis').attr('transform', `translate(0,${data.length * rowH})`).call(d3.axisBottom(x).tickFormat(d3.format('d')).ticks(6));
+  const maxC = Math.floor(labelW / 6.6);
+  data.forEach((d, i) => {
+    const s = +d.start, e = +(d.end || d.start);
+    g.append('text').attr('class', 'lbl').attr('x', -8).attr('y', i * rowH + rowH / 2).attr('dy', '.35em').attr('text-anchor', 'end')
+      .text(d.label.length > maxC ? d.label.slice(0, maxC - 1) + '…' : d.label).append('title').text(d.label);
+    g.append('rect').attr('class', 'bar t' + (ES.typeNo(d.type) || '0')).attr('x', x(s)).attr('y', i * rowH + 4)
+      .attr('width', Math.max(4, x(e + 1) - x(s))).attr('height', rowH - 8).attr('rx', 3)
+      .on('mousemove', ev => ES.tip.show(`<b>${ES.esc(d.label)}</b><br>${s}${d.end && d.end !== d.start ? '–' + d.end : ''}`, ev))
+      .on('mouseleave', () => ES.tip.hide());
+  });
+}
+
+function render() {
+  const c = document.getElementById('content');
+  if (!ID) { c.innerHTML = `<div class="status error">${ES.t('person.notfound')}</div>`; return; }
+  if (!D.base) return;
+  const b = D.base[0];
+  if (!b) { c.innerHTML = `<div class="status error">${ES.t('person.notfound')}</div>`; return; }
+  document.title = b.name + ' · ' + ES.t('site.title');
+  document.getElementById('pName').textContent = b.name;
+  document.getElementById('pLife').textContent = ES.life(b.birth, b.death);
+  const birth = (D.birth || [])[0] || {};
+  const none = `<p class="empty">${ES.t('person.none')}</p>`;
+  const uri = ES.NS + ID, unil = ES.unilUrl(uri);
+  const wds = (b.wikidata || '').split(' ').filter(Boolean);
+
+  const mand = D.mandates || [];
+  const edu = D.education || [];
+  const fam = [];
+  if (birth.father) fam.push([ES.t('person.father'), ES.personLink(birth.father, birth.fatherName)]);
+  if (birth.mother) fam.push([ES.t('person.mother'), ES.personLink(birth.mother, birth.motherName)]);
+  (D.spouses || []).forEach(s => fam.push([ES.t('person.spouses'), ES.personLink(s.spouse, s.name)]));
+  (D.children || []).forEach(s => fam.push([ES.t('person.children'), ES.personLink(s.child, s.name) + (ES.year(s.born) ? ` <span class="pill">${s.born}</span>` : '')]));
+
+  c.innerHTML = `<div class="profile-grid">
+    <div>
+      <div class="panel"><h2>${ES.t('person.mandates')} <span class="pill">${mand.length}</span></h2>
+        <div id="tl"></div>
+        ${mand.length ? table([ES.t('col.org'), ES.t('col.type'), ES.t('col.from'), ES.t('col.to')],
+          mand.map(m => [ES.orgLink(m.org, m.label), `<span class="pill">${ES.typeLabel(m.type)}</span>`, ES.year(m.start), ES.year(m.end)])) : none}
+      </div>
+      <div class="panel"><h2>${ES.t('person.education')}</h2>
+        ${edu.length ? table([ES.t('col.year'), ES.t('col.degree'), ES.t('col.discipline'), ES.t('col.institution')],
+          edu.map(e => [ES.year(e.year), ES.esc(e.degree || ''), ES.esc(e.discipline || ''), e.inst ? ES.orgLink(e.inst, e.instLabel) : ''])) : none}
+      </div>
+    </div>
+    <aside>
+      <div class="panel"><h2>${ES.t('person.facts')}</h2>
+        <ul class="facts">
+          <li><span>${ES.t('person.born')}</span><span>${ES.year(b.birth) || '–'}</span></li>
+          <li><span>${ES.t('person.died')}</span><span>${ES.year(b.death) || '–'}</span></li>
+          <li><span>${ES.t('person.gender')}</span><span>${ES.genderPill(b.gender) || '–'}</span></li>
+          <li><span>${ES.t('person.birthplace')}</span><span>${ES.esc(birth.placeLabel || '–')}</span></li>
+        </ul>
+      </div>
+      <div class="panel"><h2>${ES.t('person.family')}</h2>
+        ${fam.length ? `<ul class="facts">${fam.map(([k, v]) => `<li><span>${k}</span><span>${v}</span></li>`).join('')}</ul>` : none}
+      </div>
+      <div class="panel"><h2>${ES.t('person.links')}</h2>
+        <div class="btn-row">
+          ${unil ? `<a class="btn btn-sm btn-primary" href="${unil}" target="_blank" rel="noopener">${ES.t('person.unil')} ↗</a>` : ''}
+          ${wds.map(w => `<a class="btn btn-sm" href="${ES.esc(w)}" target="_blank" rel="noopener">${ES.t('person.wikidata')} ${ES.esc(w.split('/').pop())} ↗</a>`).join('')}
+        </div>
+        <p class="note">${ES.t('person.uri')}: <code style="word-break:break-all">${ES.esc(uri)}</code></p>
+      </div>
+    </aside>
+  </div>
+  <div id="qbox"></div>`;
+  timeline(document.getElementById('tl'), mand);
+  ES.queryBox(document.getElementById('qbox'), Q.mandates);
+}
+
+ES.init(async () => {
+  const c = document.getElementById('content');
+  if (!ID) { render(); return; }
+  ES.loading(c);
+  try {
+    const keys = Object.keys(Q);
+    const res = await Promise.all(keys.map(k => ES.sparql(Q[k])));
+    keys.forEach((k, i) => D[k] = res[i]);
+    render();
+  } catch (e) { ES.fail(c, e); }
+  document.addEventListener('es:lang', render);
+  ES.onResize(() => timeline(document.getElementById('tl'), D.mandates || []));
+});
+</script>
+</body>
+</html>

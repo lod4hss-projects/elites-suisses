@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Description · Swiss Elites</title>
+  <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/i18n.js"></script>
+  <script src="assets/js/core.js"></script>
+</head>
+<body data-section="description.html" data-title-key="nav.description">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="desc.eyebrow"></p>
+      <h1 data-i18n="desc.title"></h1>
+      <p data-i18n="desc.lead"></p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container with-toc">
+      <article class="prose" style="max-width:none">
+        <h2 id="data" data-i18n="desc.txt0"></h2>
+        <p data-i18n-html="desc.txt1"></p>
+
+        <h2 id="sample" style="margin-top:2.5rem" data-i18n="desc.txt2"></h2>
+        <p data-i18n-html="desc.txt3"></p>
+        <div class="sphere-grid">
+          <div class="sphere"><h3 data-i18n="desc.txt4"></h3><p data-i18n-html="desc.txt5"></p></div>
+          <div class="sphere"><h3 data-i18n="desc.txt6"></h3><p data-i18n-html="desc.txt7"></p></div>
+          <div class="sphere"><h3 data-i18n="desc.txt8"></h3><p data-i18n-html="desc.txt9"></p></div>
+          <div class="sphere"><h3 data-i18n="desc.txt10"></h3><p data-i18n-html="desc.txt11"></p></div>
+        </div>
+        <h3 data-i18n="desc.txt12"></h3>
+        <p data-i18n-html="desc.txt13"></p>
+
+        <h2 id="lod" style="margin-top:2.5rem" data-i18n="desc.lodTitle"></h2>
+        <p data-i18n-html="desc.lod1"></p>
+        <p data-i18n-html="desc.lod2"></p>
+        <div class="panel">
+          <ul class="facts">
+            <li><span data-i18n="desc.endpoint"></span><span><a id="epLink" target="_blank" rel="noopener" style="word-break:break-all"></a></span></li>
+            <li><span data-i18n="desc.graph"></span><span><code id="graphName"></code></span></li>
+            <li><span data-i18n="desc.ns"></span><span><code id="nsName"></code></span></li>
+            <li><span data-i18n="desc.repo"></span><span><a href="https://github.com/lod4hss-projects/elites-suisses" target="_blank" rel="noopener">lod4hss-projects/elites-suisses</a></span></li>
+          </ul>
+        </div>
+        <h3 data-i18n="desc.example"></h3>
+        <div id="exampleTable"></div>
+        <div id="exampleQuery"></div>
+        <p class="note" data-i18n-html="desc.legacy"></p>
+      </article>
+      <aside>
+        <nav class="toc" aria-label="On this page">
+          <a href="#data" data-i18n="desc.toc.data"></a>
+          <a href="#sample" data-i18n="desc.toc.sample"></a>
+          <a href="#lod" data-i18n="desc.toc.lod"></a>
+        </nav>
+      </aside>
+    </div>
+  </section>
+</main>
+<script>
+const EX_Q = `
+# Members of the Federal Council (es:g80), with start and end of mandate
+SELECT ?person ?name ?start ?end WHERE {
+  ?membership sdh-slc:P2 es:g80 ;
+              sdh-slc:P1 ?person ;
+              sdh-short:P4 ?start .
+  OPTIONAL { ?membership sdh-short:P7 ?end }
+  ?person sdh-short:P9 ?name .
+}
+ORDER BY DESC(?start)
+LIMIT 12`;
+
+ES.init(() => {
+  const ep = document.getElementById('epLink'); ep.href = ES.ENDPOINT; ep.textContent = ES.ENDPOINT;
+  document.getElementById('graphName').textContent = ES.GRAPH;
+  document.getElementById('nsName').textContent = ES.NS;
+  const box = document.getElementById('exampleTable');
+  let rows = null;
+  const render = () => {
+    ES.queryBox(document.getElementById('exampleQuery'), EX_Q);
+    if (!rows) return;
+    box.innerHTML = `<div class="table-wrap"><table class="data"><thead><tr>
+      <th>${ES.t('col.name')}</th><th>${ES.t('col.from')}</th><th>${ES.t('col.to')}</th></tr></thead><tbody>
+      ${rows.map(r => `<tr><td>${ES.personLink(r.person, r.name)}</td><td class="num">${ES.esc(r.start)}</td><td class="num">${ES.esc(r.end || '')}</td></tr>`).join('')}
+      </tbody></table></div>`;
+  };
+  ES.loading(box);
+  render();
+  document.addEventListener('es:lang', render);
+  ES.sparql(EX_Q).then(r => { rows = r; render(); }).catch(e => ES.fail(box, e));
+});
+</script>
+</body>
+</html>
