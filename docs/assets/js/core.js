@@ -48,7 +48,11 @@ ES.lit = (s) => String(s).replace(/\\/g, '\\\\').replace(/"/g, '\\"').replace(/[
 ES.esc = (s) => String(s ?? '').replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 ES.localId = (uri) => String(uri || '').replace(ES.NS, '');
 ES.param = (k) => new URLSearchParams(location.search).get(k);
-ES.href = (path) => path + (path.includes('?') ? '&' : '?') + 'lang=' + ES.lang;
+/* Site root, derived from where core.js is served (works from sub-folders and the 404 page). */
+ES.ROOT = (document.currentScript && document.currentScript.src)
+  ? new URL('../../', document.currentScript.src).href : './';
+ES.abs = (path) => /^(https?:)?\/\//.test(path) ? path : ES.ROOT + path.replace(/^\.?\//, '');
+ES.href = (path) => { const p = ES.abs(path); return p + (p.includes('?') ? '&' : '?') + 'lang=' + ES.lang; };
 ES.personLink = (uri, label) => `<a href="${ES.href('person.html?id=' + encodeURIComponent(ES.localId(uri)))}">${ES.esc(label)}</a>`;
 ES.orgLink = (uri, label) => `<a href="${ES.href('organisation.html?id=' + encodeURIComponent(ES.localId(uri)))}">${ES.esc(label)}</a>`;
 ES.typeNo = (uri) => { const m = String(uri || '').match(/g-ty(\d+)$/); return m ? m[1] : null; };
@@ -101,7 +105,7 @@ ES.renderHeader = function () {
   h.innerHTML = `
   <a class="skip-link" href="#main" data-i18n="nav.skip"></a>
   <div class="container header-inner">
-    <a class="brand" href="index.html" data-nav>
+    <a class="brand" href="${ES.abs('index.html')}" data-nav>
       <span class="brand-mark" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke-width="1.6">
           <path d="M5 17 L12 6 L19 15" stroke="#94d2e1"/><path d="M12 6 L12 19" stroke="#e193d2"/>
@@ -113,7 +117,7 @@ ES.renderHeader = function () {
     </a>
     <button class="nav-toggle" aria-expanded="false" aria-controls="main-nav"><span data-i18n="nav.menu"></span></button>
     <nav class="main-nav" id="main-nav" aria-label="Main">
-      ${NAV.map(([href, key]) => `<a href="${href}" data-nav data-i18n="${key}"${href === section ? ' aria-current="page"' : ''}></a>`).join('')}
+      ${NAV.map(([href, key]) => `<a href="${ES.abs(href)}" data-nav data-i18n="${key}"${href === section ? ' aria-current="page"' : ''}></a>`).join('')}
       <div class="lang-switch" role="group" aria-label="Language">
         ${ES.LANGS.map(l => `<button type="button" data-lang="${l}" aria-pressed="${l === ES.lang}">${l.toUpperCase()}</button>`).join('')}
       </div>
@@ -133,13 +137,13 @@ ES.renderFooter = function () {
       <span class="eyebrow" id="coop-label" data-i18n="footer.coop"></span>
       <div class="partner-logos">
         <a href="https://www.unil.ch/obelis" target="_blank" rel="noopener" title="UNIL · OBELIS – Swiss Elite Observatory">
-          <img src="assets/img/logos/unil-obelis.png" alt="UNIL – OBELIS, The Swiss Elite Observatory"></a>
+          <img src="${ES.ROOT}assets/img/logos/unil-obelis.png" alt="UNIL – OBELIS, The Swiss Elite Observatory"></a>
         <a href="https://www.epfl.ch/schools/cdh/fr/" target="_blank" rel="noopener" title="EPFL – Collège des Humanités">
-          <img src="assets/img/logos/epfl-cdh.png" alt="EPFL – Collège des Humanités"></a>
+          <img src="${ES.ROOT}assets/img/logos/epfl-cdh.png" alt="EPFL – Collège des Humanités"></a>
         <a href="https://dhbern.github.io/" target="_blank" rel="noopener" title="Digital Humanities Center, University of Bern">
-          <img src="assets/img/logos/dh-unibe.png" alt="Digital Humanities, University of Bern"></a>
+          <img src="${ES.ROOT}assets/img/logos/dh-unibe.png" alt="Digital Humanities, University of Bern"></a>
         <a class="dsl" href="https://www.dsl.unibe.ch/" target="_blank" rel="noopener" title="Data Science Lab, University of Bern">
-          <img src="assets/img/logos/unibe.svg" alt="Universität Bern"><span>Data Science<br>Lab</span></a>
+          <img src="${ES.ROOT}assets/img/logos/unibe.svg" alt="Universität Bern"><span>Data Science<br>Lab</span></a>
       </div>
     </div>
   </section>
@@ -151,7 +155,7 @@ ES.renderFooter = function () {
       </div>
       <div>
         <h4 data-i18n="footer.site"></h4>
-        <ul>${NAV.map(([href, key]) => `<li><a href="${href}" data-nav data-i18n="${key}"></a></li>`).join('')}</ul>
+        <ul>${NAV.map(([href, key]) => `<li><a href="${ES.abs(href)}" data-nav data-i18n="${key}"></a></li>`).join('')}</ul>
       </div>
       <div>
         <h4 data-i18n="footer.data"></h4>
@@ -174,8 +178,9 @@ ES.renderFooter = function () {
 /* keep ?lang on internal navigation links */
 ES.syncNavLinks = function () {
   document.querySelectorAll('a[data-nav]').forEach(a => {
-    const base = a.getAttribute('href').split('?')[0];
-    a.setAttribute('href', ES.href(base));
+    const u = new URL(a.href);   /* browser-resolved; keep existing query, set lang */
+    u.searchParams.set('lang', ES.lang);
+    a.setAttribute('href', u.href);
   });
 };
 

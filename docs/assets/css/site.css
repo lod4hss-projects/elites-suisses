@@ -234,6 +234,7 @@ a.card:hover { transform: translateY(-4px); box-shadow: var(--shadow-hover); col
 .toc a { display: block; padding: .3rem 0 .3rem .8rem; border-left: 2px solid var(--line); text-decoration: none; color: var(--muted); }
 .toc a:hover { border-color: var(--red); color: var(--navy); }
 .with-toc { display: grid; grid-template-columns: 1fr 220px; gap: 48px; }
+.with-toc > *, .profile-grid > * { min-width: 0; }  /* let wide tables scroll inside their wrapper */
 @media (max-width: 920px) { .with-toc { grid-template-columns: 1fr; } .toc { display: none; } }
 
 /* ---------- viz ---------- */

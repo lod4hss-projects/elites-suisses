@@ -1,196 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DB to LOD</title>
-    <link rel="stylesheet" href="../base_style.css">
-
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>From tables to Linked Open Data · Linked Elites Suisses</title>
+  <link rel="icon" href="../assets/img/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
+  <link rel="stylesheet" href="../assets/css/site.css">
+  <script src="../assets/js/i18n.js"></script>
+  <script src="../assets/js/core.js"></script>
+  <style>
+    .steps { counter-reset: step; }
+    .step { position: relative; padding-left: 64px; margin-bottom: 56px; }
+    .step::before {
+      counter-increment: step; content: counter(step);
+      position: absolute; left: 0; top: 0; width: 44px; height: 44px; border-radius: 12px;
+      background: var(--navy); color: #fff; display: grid; place-items: center; font-weight: 700; font-size: 1.1rem;
+    }
+    .step:nth-child(2)::before { background: var(--teal); }
+    .step:nth-child(3)::before { background: var(--rose-strong); }
+    .step:nth-child(4)::before { background: var(--red); }
+    .step::after { content: ""; position: absolute; left: 21px; top: 52px; bottom: -48px; width: 2px; background: var(--line); }
+    .step:last-child::after { display: none; }
+    .step h2 { font-size: clamp(1.35rem, 2.2vw, 1.75rem); margin-bottom: .4rem; }
+    .step > p { color: #3d4248; max-width: 75ch; }
+    table.raw td, table.raw th { font-size: .82rem; white-space: nowrap; padding: .5rem .75rem; }
+    table.raw th { text-transform: none; letter-spacing: 0; font-family: var(--mono); font-size: .75rem; }
+    table.raw td.hl { background: #fbeef7; }
+    figure { margin: 0; }
+    figure img { display: block; width: 100%; height: auto; border-radius: 12px; border: 1px solid var(--line); background: #fff; }
+    figcaption { font-size: .85rem; color: var(--muted); margin-top: .5rem; }
+    .triples code { font-size: .8rem; }
+    .triples td:first-child code { color: var(--navy-3); }
+    .triples td:nth-child(2) code { color: var(--rose-strong); }
+    .links-list { list-style: none; padding: 0; margin: 0; }
+    .links-list li { padding: .55rem 0; border-bottom: 1px solid var(--line); font-size: .95rem; }
+    .links-list li:last-child { border-bottom: 0; }
+    @media (max-width: 640px) { .step { padding-left: 0; padding-top: 56px; } .step::after { display: none; } }
+  </style>
 </head>
-
-<body>
-
-    <h1>From tables to Linked Open Data - The LESSH Project</h1>
-
-    <div>
-        <a href="./Beretta_LOD_for_research_LESSH.pdf" download>Slides of the seminar</a>
-        <p>Short link to this page <i>https://ouvaton.link/ILGWs4</i></p>
-        <br/>
-        <ul>
-            <li>Link to the <a href="https://elites-suisses.lod4hss.org"
-                 target="_blank">Experimental website</a></li>
-            <li>Lien vers le dépôt GitHub <a href="https://github.com/lod4hss-projects/elites_suisses_data"
-                 target="_blank">Elites suisses data</a></li>
-            <li>Lien vers le pad collaboratif: <a href="https://mypads.framapad.org/mypads/?/mypads/group/axe-savoirs-ym1coq74z/pad/view/lessh-745nk7p6"
-                 target="_blank">https://ouvaton.link/ruB0rp</a></li>
-        </ul>
+<body data-section="description.html" data-title-key="doc.title">
+<main id="main">
+  <section class="page-hero">
+    <div class="container">
+      <p class="eyebrow" data-i18n="doc.eyebrow"></p>
+      <h1 data-i18n="doc.title"></h1>
+      <p data-i18n="doc.lead"></p>
+      <div class="btn-row" style="margin-top:1.4rem">
+        <a class="btn btn-primary" href="Beretta_LOD_for_research_LESSH.pdf" target="_blank" rel="noopener" data-i18n="doc.slides"></a>
+        <a class="btn" href="../description.html" data-nav data-i18n="doc.back"></a>
+      </div>
     </div>
+  </section>
 
-    <br />
-    <br />
-    <h2>Information as a table</h2>
+  <section class="section">
+    <div class="container with-toc">
+      <div class="steps">
 
-    <p>Exemple : <a href="https://elitessuisses.unil.ch/p/55864">Eugen Huber (1849-1923)</a></p>
+        <article class="step" id="table">
+          <p class="eyebrow" data-i18n="doc.s1.eyebrow"></p>
+          <h2 data-i18n="doc.s1.title"></h2>
+          <p data-i18n-html="doc.s1.text"></p>
+          <div class="table-wrap">
+            <table class="data raw">
+              <thead><tr>
+                <th>name_forename</th><th>zkp_edu</th><th>ID_IDENTITE</th><th>Date</th><th>Formation niveau</th>
+                <th>Titre_stxt</th><th>TITRE_Codé</th><th>Institution</th><th>id_institution</th>
+                <th>THÈSE_Directeur_IdIdentité</th><th>Lieu</th><th>Canton</th><th>Pays</th>
+              </tr></thead>
+              <tbody>
+                <tr><td>Huber, Eugen</td><td>OBEDU_25711</td><td>55,864</td><td>1871</td><td>Supérieure</td><td></td><td>Licence</td><td></td><td></td><td></td><td>Berlin</td><td></td><td>Allemagne</td></tr>
+                <tr><td>Huber, Eugen</td><td>OBEDU_28015</td><td>55,864</td><td></td><td>Complémentaire</td><td></td><td></td><td></td><td></td><td></td><td>Vienne</td><td></td><td>Autriche</td></tr>
+                <tr><td>Huber, Eugen</td><td>OBEDU_29243</td><td>55,864</td><td></td><td>Complémentaire</td><td></td><td></td><td>UniGe</td><td>2,350</td><td></td><td>Genève</td><td>GE</td><td>Suisse</td></tr>
+                <tr><td>Huber, Eugen</td><td class="hl">OBEDU_22660</td><td>55,864</td><td>1873</td><td>Doctorat</td><td></td><td>Thèse d’habilitation</td><td>UniZh</td><td>2,352</td><td></td><td>Zurich</td><td>ZH</td><td>Suisse</td></tr>
+                <tr><td>Huber, Eugen</td><td>OBEDU_5745</td><td>55,864</td><td>1868-1869</td><td>Supérieure</td><td></td><td></td><td>UniZh</td><td>2,352</td><td></td><td>Zurich</td><td>ZH</td><td>Suisse</td></tr>
+                <tr><td>Huber, Eugen</td><td class="hl">OBEDU_14221</td><td>55,864</td><td>1872</td><td>Doctorat</td><td>Dr. iur.</td><td>Doctorat</td><td>UniZh</td><td>2,352</td><td>82,143</td><td>Zurich</td><td>ZH</td><td>Suisse</td></tr>
+                <tr><td>Huber, Eugen</td><td>OBEDU_1403</td><td>55,864</td><td></td><td>Base</td><td></td><td>Maturité</td><td></td><td></td><td></td><td>Zürich</td><td>ZH</td><td>Suisse</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="note"><span data-i18n="doc.s1.source"></span> <a href="https://elitessuisses.unil.ch/p/55864" target="_blank" rel="noopener">elitessuisses.unil.ch/p/55864 ↗</a></p>
+        </article>
 
-    <div>
+        <article class="step" id="model">
+          <p class="eyebrow" data-i18n="doc.s2.eyebrow"></p>
+          <h2 data-i18n="doc.s2.title"></h2>
+          <p data-i18n-html="doc.s2.text"></p>
+          <figure>
+            <a href="education.png" target="_blank" rel="noopener"><img src="education.png" alt="SDHSS conceptual model: Study and Obtaining a Study Title" loading="lazy"></a>
+            <figcaption data-i18n="doc.s2.caption"></figcaption>
+          </figure>
+        </article>
 
-        <table>
-            <tr>
-                <th>name_forename</th>
-                <th>zkp_edu</th>
-                <th>ID_IDENTITE</th>
-                <th>Date</th>
-                <th>Formation niveau</th>
-                <th>Titre_stxt</th>
-                <th>TITRE_Codé</th>
-                <th>Institution</th>
-                <th>id_institution</th>
-                <th>THÈSE_Directeur_IdIdentité</th>
-                <th>Lieu</th>
-                <th>Canton</th>
-                <th>Pays</th>
-            </tr>
-            <tr class="odd">
-                <td>Huber, Eugen</td>
-                <td>OBEDU_25711</td>
-                <td>55,864</td>
-                <td>1871</td>
-                <td>Supérieure</td>
-                <td>&nbsp;</td>
-                <td>Licence</td>
-                <td></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>Berlin</td>
-                <td></td>
-                <td>Allemagne</td>
-            </tr>
-            <tr>
-                <td>Huber, Eugen</td>
-                <td>OBEDU_28015</td>
-                <td>55,864</td>
-                <td></td>
-                <td>Complémentaire</td>
-                <td>&nbsp;</td>
-                <td></td>
-                <td></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>Vienne</td>
-                <td></td>
-                <td>Autriche</td>
-            </tr>
-            <tr class="odd">
-                <td>Huber, Eugen</td>
-                <td>OBEDU_29243</td>
-                <td>55,864</td>
-                <td></td>
-                <td>Complémentaire</td>
-                <td>&nbsp;</td>
-                <td></td>
-                <td>UniGe</td>
-                <td>2,350</td>
-                <td>&nbsp;</td>
-                <td>Genève</td>
-                <td>GE</td>
-                <td>Suisse</td>
-            </tr>
-            <tr>
-                <td>Huber, Eugen</td>
-                <td>OBEDU_22660</td>
-                <td>55,864</td>
-                <td>1873</td>
-                <td>Doctorat</td>
-                <td>&nbsp;</td>
-                <td>Thèse d’habilitation</td>
-                <td>UniZh</td>
-                <td>2,352</td>
-                <td>&nbsp;</td>
-                <td>Zurich</td>
-                <td>ZH</td>
-                <td>Suisse</td>
-            </tr>
-            <tr class="odd">
-                <td>Huber, Eugen</td>
-                <td>OBEDU_5745</td>
-                <td>55,864</td>
-                <td>1868-1869</td>
-                <td>Supérieure</td>
-                <td>&nbsp;</td>
-                <td></td>
-                <td>UniZh</td>
-                <td>2,352</td>
-                <td>&nbsp;</td>
-                <td>Zurich</td>
-                <td>ZH</td>
-                <td>Suisse</td>
-            </tr>
-            <tr>
-                <td>Huber, Eugen</td>
-                <td>OBEDU_14221</td>
-                <td>55,864</td>
-                <td>1872</td>
-                <td>Doctorat</td>
-                <td>Dr. iur.</td>
-                <td>Doctorat</td>
-                <td>UniZh</td>
-                <td>2,352</td>
-                <td>82,143</td>
-                <td>Zurich</td>
-                <td>ZH</td>
-                <td>Suisse</td>
-            </tr>
-            <tr class="odd">
-                <td>Huber, Eugen</td>
-                <td>OBEDU_1403</td>
-                <td>55,864</td>
-                <td></td>
-                <td>Base</td>
-                <td>&nbsp;</td>
-                <td>Maturité</td>
-                <td></td>
-                <td>&nbsp;</td>
-                <td>&nbsp;</td>
-                <td>Zürich</td>
-                <td>ZH</td>
-                <td>Suisse</td>
-            </tr>
-        </table>
+        <article class="step" id="graph">
+          <p class="eyebrow" data-i18n="doc.s3.eyebrow"></p>
+          <h2 data-i18n="doc.s3.title"></h2>
+          <p data-i18n-html="doc.s3.text"></p>
+          <div id="triples"></div>
+          <div id="triplesQuery"></div>
+        </article>
 
+        <article class="step" id="interfaces">
+          <p class="eyebrow" data-i18n="doc.s4.eyebrow"></p>
+          <h2 data-i18n="doc.s4.title"></h2>
+          <p data-i18n-html="doc.s4.text"></p>
+          <div class="btn-row" style="margin-bottom:1.5rem">
+            <a class="btn btn-primary" href="../person.html?id=p55864" data-nav data-i18n="doc.s4.profile"></a>
+          </div>
+          <figure style="max-width:760px">
+            <a href="wisski-eugen-huber.png" target="_blank" rel="noopener"><img src="wisski-eugen-huber.png" alt="Eugen Huber in WissKI" loading="lazy"></a>
+            <figcaption data-i18n="doc.s4.caption"></figcaption>
+          </figure>
+        </article>
+
+      </div>
+
+      <aside>
+        <nav class="toc" aria-label="On this page">
+          <a href="#table" data-i18n="doc.s1.eyebrow"></a>
+          <a href="#model" data-i18n="doc.s2.eyebrow"></a>
+          <a href="#graph" data-i18n="doc.s3.eyebrow"></a>
+          <a href="#interfaces" data-i18n="doc.s4.eyebrow"></a>
+          <div class="panel" style="margin-top:1.5rem;padding:1rem">
+            <p class="eyebrow" style="margin-bottom:.4rem" data-i18n="doc.res"></p>
+            <ul class="links-list">
+              <li><a href="Beretta_LOD_for_research_LESSH.pdf" target="_blank" rel="noopener" data-i18n="doc.res.slides"></a></li>
+              <li><a href="https://github.com/lod4hss-projects/elites_suisses_data" target="_blank" rel="noopener" data-i18n="doc.res.data"></a></li>
+              <li><a href="https://mypads.framapad.org/mypads/?/mypads/group/axe-savoirs-ym1coq74z/pad/view/lessh-745nk7p6" target="_blank" rel="noopener" data-i18n="doc.res.pad"></a></li>
+              <li><a href="https://ontome.net/project/269" target="_blank" rel="noopener" data-i18n="doc.res.ontome"></a></li>
+              <li><span data-i18n="doc.res.short"></span><br><code>ouvaton.link/ILGWs4</code></li>
+            </ul>
+          </div>
+        </nav>
+      </aside>
     </div>
+  </section>
+</main>
+<script>
+const TRIPLES_Q = `
+# All statements about the study records of Eugen Huber (es:p55864)
+SELECT ?study ?property ?value ?valueLabel WHERE {
+  ?study sdh-sls:P9 es:p55864 ;
+         ?property ?value .
+  OPTIONAL { ?value sdh-short:P9 ?valueLabel }
+}
+ORDER BY ?study ?property`;
 
-    <br />
-    <br />
-    <br />
+const PFX = [
+  ['https://elites-suisses.lod4hss.org/resource/', 'es:'],
+  ['https://sdhss.org/ontology/social-life-specific/', 'sdh-sls:'],
+  ['https://sdhss.org/ontology/social-life-core/', 'sdh-slc:'],
+  ['https://sdhss.org/ontology/shortcuts/', 'sdh-short:'],
+  ['https://sdhss.org/ontology/core/', 'sdh:'],
+  ['http://www.cidoc-crm.org/cidoc-crm/', 'crm:'],
+  ['http://www.w3.org/1999/02/22-rdf-syntax-ns#type', 'rdf:type'],
+];
+const short = (u) => { for (const [f, p] of PFX) if (u.startsWith(f)) return p + u.slice(f.length); return u; };
+const NOTES = {
+  'rdf:type': 'doc.p.type', 'sdh-short:P1': 'doc.p.date', 'sdh-sls:P9': 'doc.p.student', 'sdh-sls:P10': 'doc.p.title',
+  'sdh-sls:P17': 'doc.p.inst', 'sdh-sls:P25': 'doc.p.disc', 'sdh-sls:P11': 'doc.p.supervisor',
+};
 
-<div>
-    <h2>Information as a graph</h2>
-    
-        <div>
-            <h3>SDHSS conceptual model for the classes <i>Study</i> and <i>Obtaining a Study Title</i></h3>
-            <br />
-            <img src="./education.png" width="100%" alt="Eugen Huber in Wisski">
-        </div>
-        <br />
-    <br />
+function valueCell(r) {
+  if (!/^https?:/.test(r.value)) return `<code>"${ES.esc(r.value)}"</code>`;
+  const id = ES.localId(r.value), lbl = r.valueLabel ? ` <span class="pill">${ES.esc(r.valueLabel)}</span>` : '';
+  if (/^p\d+$/.test(id)) return `<a href="${ES.href('person.html?id=' + id)}"><code>${short(r.value)}</code></a>${lbl}`;
+  if (/^g\d+$/.test(id)) return `<a href="${ES.href('organisation.html?id=' + id)}"><code>${short(r.value)}</code></a>${lbl}`;
+  return `<code>${ES.esc(short(r.value))}</code>${lbl}`;
+}
 
-    <div>
-            <h3>The transformed data</h3>
-            <p><a href="https://elites-suisses.lod4hss.org/sparql-queries/instance-page.html?uri=https://elites-suisses.lod4hss.org/resource/p55864">Eugen Huber (1849-1923)</a></p>
-        </div>
-        <br/>
-        <br/>
+let rows = null;
+function render() {
+  ES.queryBox(document.getElementById('triplesQuery'), TRIPLES_Q);
+  if (!rows) return;
+  const el = document.getElementById('triples');
+  el.innerHTML = `<div class="table-wrap"><table class="data triples"><thead><tr>
+    <th>${ES.t('doc.t.subject')}</th><th>${ES.t('doc.t.predicate')}</th><th>${ES.t('doc.t.object')}</th></tr></thead><tbody>
+    ${rows.map(r => {
+      const p = short(r.property), note = NOTES[p] ? `<br><small style="color:var(--muted)">${ES.t(NOTES[p])}</small>` : '';
+      return `<tr><td><code>${ES.esc(short(r.study))}</code></td><td><code>${ES.esc(p)}</code>${note}</td><td>${valueCell(r)}</td></tr>`;
+    }).join('')}</tbody></table></div>`;
+}
 
-        <div>
-            <h3>Wisski Graphical User Interface</h3>
-            <br />
-            <img src="./wisski-eugen-huber.png" width="60%" alt="Eugen Huber in Wisski">
-        </div>
-</div>
-
-
+ES.init(() => {
+  const el = document.getElementById('triples');
+  render(); ES.loading(el);
+  document.addEventListener('es:lang', render);
+  ES.sparql(TRIPLES_Q).then(r => { rows = r; render(); }).catch(e => ES.fail(el, e));
+});
+</script>
 </body>
-
 </html>
