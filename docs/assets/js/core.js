@@ -140,10 +140,10 @@ ES.renderFooter = function () {
           <img src="${ES.ROOT}assets/img/logos/unil-obelis.png" alt="UNIL – OBELIS, The Swiss Elite Observatory"></a>
         <a href="https://www.epfl.ch/schools/cdh/fr/" target="_blank" rel="noopener" title="EPFL – Collège des Humanités">
           <img src="${ES.ROOT}assets/img/logos/epfl-cdh.png" alt="EPFL – Collège des Humanités"></a>
-        <a href="https://dhbern.github.io/" target="_blank" rel="noopener" title="Digital Humanities Center, University of Bern">
-          <img src="${ES.ROOT}assets/img/logos/dh-unibe.png" alt="Digital Humanities, University of Bern"></a>
         <a class="dsl" href="https://www.dsl.unibe.ch/" target="_blank" rel="noopener" title="Data Science Lab, University of Bern">
           <img src="${ES.ROOT}assets/img/logos/unibe.svg" alt="Universität Bern"><span>Data Science<br>Lab</span></a>
+        <a href="https://dhbern.github.io/" target="_blank" rel="noopener" title="Digital Humanities Center, University of Bern">
+          <img src="${ES.ROOT}assets/img/logos/dh-unibe.png" alt="Digital Humanities, University of Bern"></a>
       </div>
     </div>
   </section>
