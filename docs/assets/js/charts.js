@@ -23,13 +23,13 @@ ES.charts.stacked = function (el, data, keys, opts = {}) {
   const { g, w, h } = frame(el, opts);
   const pct = !!opts.percent;
   const rows = data.map(d => {
-    const tot = keys.reduce((s, k) => s + (d.values[k] || 0), 0) || 1;
+    const tot = (opts.totalKeys || keys).reduce((s, k) => s + (d.values[k] || 0), 0) || 1;
     const r = { key: d.key, _tot: tot };
     keys.forEach(k => r[k] = pct ? (d.values[k] || 0) / tot * 100 : (d.values[k] || 0));
     return r;
   });
   const x = d3.scaleBand().domain(rows.map(r => r.key)).range([0, w]).padding(0.28);
-  const max = pct ? 100 : d3.max(rows, r => keys.reduce((s, k) => s + r[k], 0)) || 1;
+  const max = pct ? d3.max(rows, r => keys.reduce((s, k) => s + r[k], 0)) || 1 : d3.max(rows, r => keys.reduce((s, k) => s + r[k], 0)) || 1;
   const y = d3.scaleLinear().domain([0, max]).nice().range([h, 0]);
   g.append('g').attr('class', 'grid').call(d3.axisLeft(y).ticks(5).tickSize(-w).tickFormat(''));
   g.append('g').attr('class', 'axis').attr('transform', `translate(0,${h})`).call(d3.axisBottom(x).tickSizeOuter(0));
@@ -40,19 +40,21 @@ ES.charts.stacked = function (el, data, keys, opts = {}) {
     .attr('x', v => x(v.data.key)).attr('width', x.bandwidth())
     .attr('y', h).attr('height', 0).attr('rx', 2)
     .on('mousemove', (ev, v) => {
-      const r = v.data, lines = keys.map(k => {
+      const r = v.data, lines = [v.k].map(k => {
         const abs = pct ? Math.round(r[k] * r._tot / 100) : r[k];
         return `${opts.labels?.[k] || k}: <b>${ES.fmt(abs)}</b> (${(abs / r._tot * 100).toFixed(1)} %)`;
       });
-      ES.tip.show(`<b>${r.key}</b><br>${lines.join('<br>')}`, ev);
+      ES.tip.show(`<b>${r.key}</b><br>${lines.join('<br>')}${opts.href ? ' ↗' : ''}`, ev);
     })
     .on('mouseleave', () => ES.tip.hide())
+    .classed('clickable', !!opts.href)
+    .on('click', (ev, v) => { const u = opts.href && opts.href(v.data.key, v.k); if (u) { ES.tip.hide(); location.href = u; } })
     .transition().duration(600)
     .attr('y', v => y(v[1])).attr('height', v => Math.max(0, y(v[0]) - y(v[1])));
   if (!pct && opts.totals !== false) {
     g.selectAll('text.tot').data(rows).join('text').attr('class', 'tot')
       .attr('x', r => x(r.key) + x.bandwidth() / 2).attr('y', r => y(keys.reduce((s, k) => s + r[k], 0)) - 6)
-      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#5d6168').text(r => ES.fmt(r._tot));
+      .attr('text-anchor', 'middle').attr('font-size', 11).attr('fill', '#5d6168').text(r => ES.fmt(keys.reduce((s, k) => s + r[k], 0)));
   }
 };
 
@@ -78,7 +80,9 @@ ES.charts.lines = function (el, series, opts = {}) {
     g.selectAll(null).data(s.points).join('circle').attr('cx', p => x(p.x)).attr('cy', p => y(p.y)).attr('r', 4)
       .attr('fill', '#fff').attr('stroke', s.color).attr('stroke-width', 2)
       .on('mousemove', (ev, p) => ES.tip.show(`<b>${s.name}</b> · ${p.x}<br>${p.tip ?? p.y}`, ev))
-      .on('mouseleave', () => ES.tip.hide());
+      .on('mouseleave', () => ES.tip.hide())
+      .classed('clickable', p => !!p.href)
+      .on('click', (ev, p) => { if (p.href) { ES.tip.hide(); location.href = p.href; } });
   });
 };
 
@@ -97,11 +101,12 @@ ES.charts.hbar = function (el, data, opts = {}) {
     .attr('x', -8).attr('y', (d, i) => y(i) + y.bandwidth() / 2).attr('dy', '.35em').attr('text-anchor', 'end')
     .attr('font-size', 12.5).attr('fill', '#1b1b1b')
     .text(d => d.label.length > maxChars ? d.label.slice(0, maxChars - 1) + '…' : d.label)
+    .classed('clickable', d => !!d.href).on('click', (ev, d) => { if (d.href) location.href = d.href; })
     .append('title').text(d => d.label);
   const bars = g.selectAll('rect').data(data).join('rect')
     .attr('x', 0).attr('y', (d, i) => y(i)).attr('height', y.bandwidth()).attr('rx', 3)
     .attr('fill', (d, i) => opts.color || (i < 3 ? '#25415d' : '#426f9a')).attr('width', 0)
-    .style('cursor', d => d.href ? 'pointer' : 'default')
+    .classed('clickable', d => !!d.href)
     .on('click', (ev, d) => { if (d.href) location.href = d.href; })
     .on('mousemove', (ev, d) => ES.tip.show(`<b>${ES.esc(d.label)}</b><br>${ES.fmt(d.value)}`, ev))
     .on('mouseleave', () => ES.tip.hide());

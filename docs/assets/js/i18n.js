@@ -8,7 +8,7 @@ ES.LANGS = ['en', 'fr', 'de'];
 ES.dict = {
   /* ------------------------------------------------------------------ EN */
   en: {
-    'site.title': 'Swiss Elites',
+    'site.title': 'Linked Elites Suisses',
     'site.sub': 'Swiss elites database · Linked Open Data',
     'nav.home': 'Home', 'nav.description': 'Description', 'nav.viz': 'Visualisations',
     'nav.persons': 'Persons', 'nav.orgs': 'Organisations', 'nav.menu': 'Menu', 'nav.skip': 'Skip to main content',
@@ -26,7 +26,7 @@ ES.dict = {
     'common.kgDerived': 'Computed live from the knowledge graph.',
 
     'home.eyebrow': 'Knowledge graph · 1890–2020',
-    'home.title': 'Swiss Elites',
+    'home.title': 'Linked Elites Suisses',
     'home.lead': 'Who held power in Switzerland? Explore political, economic, administrative and academic elites from 1890 to today — their careers, education, families and networks — as Linked Open Data, queried live from the SPARQL endpoint.',
     'home.ctaPersons': 'Browse persons', 'home.ctaViz': 'Explore visualisations',
     'home.searchPh': 'Search a person, e.g. Comtesse, Kopp, Dreifuss…',
@@ -115,8 +115,25 @@ ES.dict = {
     'type.1': 'Cantonal government', 'type.2': 'Canton', 'type.3': 'Cantonal parliament', 'type.4': 'Federal Parliament',
     'type.5': 'Federal Council', 'type.6': 'University / school', 'type.7': 'Faculty / department', 'type.none': 'Other organisation',
 
+
+    'persons.f.active': 'Active in {y}', 'persons.f.born': 'Born in {p}', 'persons.f.disc': 'Discipline: {d}',
+    'persons.f.deg': 'Degree: {d}', 'persons.f.inst': 'Studied at: {i}', 'persons.f.edu': 'With a recorded degree',
+    'persons.f.wd': 'Linked to Wikidata', 'persons.f.remove': 'Remove filter',
+    'viz.hint.bars': 'Click a bar segment to list the corresponding persons.',
+    'viz.hint.comp': 'Click a bar segment to list the persons; click a gender in the legend to show or hide it.',
+    'viz.hint.points': 'Click a point to list the corresponding persons.',
+    'viz.hint.map': 'Click a circle to list the persons born there.',
+    'viz.hint.orgs': 'Click a bar to open the organisation.',
+    'home.kpiHint': 'Click a figure to open the corresponding list.',
+    'home.yearsAll': 'All', 'home.yearsWomen': 'Women only',
+    'home.nlEyebrow': 'Natural-language access · Beta',
+    'home.nlTitle': 'Query the database in natural language',
+    'home.nlText': 'Ask questions about the Swiss elites in your own words — no SPARQL needed. Swiss Elites Chat is hosted by the Data Science Lab of the University of Bern.',
+    'home.nlCta': 'Open Swiss Elites Chat', 'home.nlLogin': 'Login required',
+    'desc.docLod': 'Documentation of the LODification →', 'desc.docSlides': 'Slides: LOD for research (PDF, 11 MB)',
+    'persons.f.org': 'Member of {o}', 'org.hint': 'Click a point to list the members active in that year.',
     'footer.coop': 'A cooperation of',
-    'footer.about': 'Swiss Elites is a Linked Open Data interface to the Swiss Elites database of the Swiss Elite Observatory (OBELIS), University of Lausanne, developed in cooperation with the EPFL College of Humanities, the Digital Humanities Center and the Data Science Lab of the University of Bern.',
+    'footer.about': 'Linked Elites Suisses is a Linked Open Data interface to the Swiss Elites database of the Swiss Elite Observatory (OBELIS), University of Lausanne, developed in cooperation with the EPFL College of Humanities, the Digital Humanities Center and the Data Science Lab of the University of Bern.',
     'footer.site': 'Site', 'footer.data': 'Data',
     'footer.endpoint': 'SPARQL endpoint', 'footer.original': 'Original database (UNIL)', 'footer.repo': 'GitHub repository', 'footer.ontome': 'Ontology profiles (OntoME)',
     'footer.licence': 'Code: MIT licence. Data: © OBELIS, University of Lausanne.',
@@ -125,7 +142,7 @@ ES.dict = {
 
   /* ------------------------------------------------------------------ FR */
   fr: {
-    'site.title': 'Élites suisses',
+    'site.title': 'Linked Elites Suisses',
     'site.sub': 'Base de données des élites suisses · Linked Open Data',
     'nav.home': 'Accueil', 'nav.description': 'Description', 'nav.viz': 'Visualisations',
     'nav.persons': 'Personnes', 'nav.orgs': 'Organisations', 'nav.menu': 'Menu', 'nav.skip': 'Aller au contenu',
@@ -143,7 +160,7 @@ ES.dict = {
     'common.kgDerived': 'Calculé en direct à partir du graphe de connaissances.',
 
     'home.eyebrow': 'Graphe de connaissances · 1890–2020',
-    'home.title': 'Élites suisses',
+    'home.title': 'Linked Elites Suisses',
     'home.lead': 'Qui a détenu le pouvoir en Suisse ? Explorez les élites politiques, économiques, administratives et académiques de 1890 à aujourd’hui — carrières, formations, familles et réseaux — en Linked Open Data, interrogées en direct sur le point d’accès SPARQL.',
     'home.ctaPersons': 'Parcourir les personnes', 'home.ctaViz': 'Voir les visualisations',
     'home.searchPh': 'Rechercher une personne, p. ex. Comtesse, Kopp, Dreifuss…',
@@ -232,8 +249,25 @@ ES.dict = {
     'type.1': 'Gouvernement cantonal', 'type.2': 'Canton', 'type.3': 'Parlement cantonal', 'type.4': 'Parlement fédéral',
     'type.5': 'Conseil fédéral', 'type.6': 'Université / haute école', 'type.7': 'Faculté / département', 'type.none': 'Autre organisation',
 
+
+    'persons.f.active': 'Actif·ve en {y}', 'persons.f.born': 'Né·e à {p}', 'persons.f.disc': 'Discipline : {d}',
+    'persons.f.deg': 'Diplôme : {d}', 'persons.f.inst': 'Études à : {i}', 'persons.f.edu': 'Avec diplôme enregistré',
+    'persons.f.wd': 'Lié·e à Wikidata', 'persons.f.remove': 'Retirer le filtre',
+    'viz.hint.bars': 'Cliquez sur un segment pour afficher la liste des personnes correspondantes.',
+    'viz.hint.comp': 'Cliquez sur un segment pour afficher les personnes ; cliquez sur un sexe dans la légende pour l’afficher ou le masquer.',
+    'viz.hint.points': 'Cliquez sur un point pour afficher la liste des personnes correspondantes.',
+    'viz.hint.map': 'Cliquez sur un cercle pour afficher les personnes nées dans ce lieu.',
+    'viz.hint.orgs': 'Cliquez sur une barre pour ouvrir l’organisation.',
+    'home.kpiHint': 'Cliquez sur un chiffre pour ouvrir la liste correspondante.',
+    'home.yearsAll': 'Tous', 'home.yearsWomen': 'Femmes',
+    'home.nlEyebrow': 'Accès en langage naturel · Bêta',
+    'home.nlTitle': 'Interrogez la base de données en langage naturel',
+    'home.nlText': 'Posez vos questions sur les élites suisses avec vos propres mots — sans SPARQL. Swiss Elites Chat est hébergé par le Data Science Lab de l’Université de Berne.',
+    'home.nlCta': 'Ouvrir Swiss Elites Chat', 'home.nlLogin': 'Connexion requise',
+    'desc.docLod': 'Documentation de la LODification →', 'desc.docSlides': 'Diapositives : LOD for research (PDF, 11 Mo)',
+    'persons.f.org': 'Membre de {o}', 'org.hint': 'Cliquez sur un point pour afficher les membres actifs cette année-là.',
     'footer.coop': 'Une coopération de',
-    'footer.about': 'Élites suisses est une interface Linked Open Data de la Base de données des élites suisses de l’Observatoire des élites suisses (OBELIS), Université de Lausanne, développée en coopération avec le Collège des Humanités de l’EPFL, le Digital Humanities Center et le Data Science Lab de l’Université de Berne.',
+    'footer.about': 'Linked Elites Suisses est une interface Linked Open Data de la Base de données des élites suisses de l’Observatoire des élites suisses (OBELIS), Université de Lausanne, développée en coopération avec le Collège des Humanités de l’EPFL, le Digital Humanities Center et le Data Science Lab de l’Université de Berne.',
     'footer.site': 'Site', 'footer.data': 'Données',
     'footer.endpoint': 'Point d’accès SPARQL', 'footer.original': 'Base de données originale (UNIL)', 'footer.repo': 'Dépôt GitHub', 'footer.ontome': 'Profils ontologiques (OntoME)',
     'footer.licence': 'Code : licence MIT. Données : © OBELIS, Université de Lausanne.',
@@ -242,7 +276,7 @@ ES.dict = {
 
   /* ------------------------------------------------------------------ DE */
   de: {
-    'site.title': 'Schweizer Eliten',
+    'site.title': 'Linked Elites Suisses',
     'site.sub': 'Datenbank der Schweizer Eliten · Linked Open Data',
     'nav.home': 'Startseite', 'nav.description': 'Beschreibung', 'nav.viz': 'Visualisierungen',
     'nav.persons': 'Personen', 'nav.orgs': 'Organisationen', 'nav.menu': 'Menü', 'nav.skip': 'Zum Inhalt springen',
@@ -260,7 +294,7 @@ ES.dict = {
     'common.kgDerived': 'Live aus dem Wissensgraphen berechnet.',
 
     'home.eyebrow': 'Wissensgraph · 1890–2020',
-    'home.title': 'Schweizer Eliten',
+    'home.title': 'Linked Elites Suisses',
     'home.lead': 'Wer hatte in der Schweiz die Macht? Entdecken Sie politische, wirtschaftliche, administrative und akademische Eliten von 1890 bis heute — ihre Laufbahnen, Ausbildungen, Familien und Netzwerke — als Linked Open Data, live über den SPARQL-Endpunkt abgefragt.',
     'home.ctaPersons': 'Personen durchsuchen', 'home.ctaViz': 'Visualisierungen ansehen',
     'home.searchPh': 'Person suchen, z. B. Comtesse, Kopp, Dreifuss…',
@@ -349,8 +383,25 @@ ES.dict = {
     'type.1': 'Kantonsregierung', 'type.2': 'Kanton', 'type.3': 'Kantonsparlament', 'type.4': 'Bundesparlament',
     'type.5': 'Bundesrat', 'type.6': 'Universität / Hochschule', 'type.7': 'Fakultät / Departement', 'type.none': 'Andere Organisation',
 
+
+    'persons.f.active': 'Aktiv {y}', 'persons.f.born': 'Geboren in {p}', 'persons.f.disc': 'Fach: {d}',
+    'persons.f.deg': 'Abschluss: {d}', 'persons.f.inst': 'Studiert an: {i}', 'persons.f.edu': 'Mit erfasstem Abschluss',
+    'persons.f.wd': 'Mit Wikidata verknüpft', 'persons.f.remove': 'Filter entfernen',
+    'viz.hint.bars': 'Klicken Sie auf ein Balkensegment, um die entsprechenden Personen aufzulisten.',
+    'viz.hint.comp': 'Klicken Sie auf ein Balkensegment, um die Personen aufzulisten; ein Klick auf ein Geschlecht in der Legende blendet es ein oder aus.',
+    'viz.hint.points': 'Klicken Sie auf einen Punkt, um die entsprechenden Personen aufzulisten.',
+    'viz.hint.map': 'Klicken Sie auf einen Kreis, um die dort geborenen Personen aufzulisten.',
+    'viz.hint.orgs': 'Klicken Sie auf einen Balken, um die Organisation zu öffnen.',
+    'home.kpiHint': 'Klicken Sie auf eine Zahl, um die entsprechende Liste zu öffnen.',
+    'home.yearsAll': 'Alle', 'home.yearsWomen': 'Nur Frauen',
+    'home.nlEyebrow': 'Zugang in natürlicher Sprache · Beta',
+    'home.nlTitle': 'Die Datenbank in natürlicher Sprache abfragen',
+    'home.nlText': 'Stellen Sie Fragen zu den Schweizer Eliten in Ihren eigenen Worten — ganz ohne SPARQL. Swiss Elites Chat wird vom Data Science Lab der Universität Bern betrieben.',
+    'home.nlCta': 'Swiss Elites Chat öffnen', 'home.nlLogin': 'Anmeldung erforderlich',
+    'desc.docLod': 'Dokumentation der LODifizierung →', 'desc.docSlides': 'Folien: LOD for research (PDF, 11 MB)',
+    'persons.f.org': 'Mitglied von {o}', 'org.hint': 'Klicken Sie auf einen Punkt, um die in diesem Jahr aktiven Mitglieder aufzulisten.',
     'footer.coop': 'Eine Kooperation von',
-    'footer.about': 'Schweizer Eliten ist eine Linked-Open-Data-Schnittstelle zur Datenbank der Schweizer Eliten des Observatoriums der Schweizer Eliten (OBELIS), Universität Lausanne, entwickelt in Zusammenarbeit mit dem Collège des Humanités der EPFL sowie dem Digital Humanities Center und dem Data Science Lab der Universität Bern.',
+    'footer.about': 'Linked Elites Suisses ist eine Linked-Open-Data-Schnittstelle zur Datenbank der Schweizer Eliten des Observatoriums der Schweizer Eliten (OBELIS), Universität Lausanne, entwickelt in Zusammenarbeit mit dem Collège des Humanités der EPFL sowie dem Digital Humanities Center und dem Data Science Lab der Universität Bern.',
     'footer.site': 'Website', 'footer.data': 'Daten',
     'footer.endpoint': 'SPARQL-Endpunkt', 'footer.original': 'Originaldatenbank (UNIL)', 'footer.repo': 'GitHub-Repository', 'footer.ontome': 'Ontologie-Profile (OntoME)',
     'footer.licence': 'Code: MIT-Lizenz. Daten: © OBELIS, Universität Lausanne.',

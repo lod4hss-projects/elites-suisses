@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Person · Swiss Elites</title>
+  <title>Person · Linked Elites Suisses</title>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
@@ -107,7 +107,9 @@ function timeline(el, rows) {
     g.append('rect').attr('class', 'bar t' + (ES.typeNo(d.type) || '0')).attr('x', x(s)).attr('y', i * rowH + 4)
       .attr('width', Math.max(4, x(e + 1) - x(s))).attr('height', rowH - 8).attr('rx', 3)
       .on('mousemove', ev => ES.tip.show(`<b>${ES.esc(d.label)}</b><br>${s}${d.end && d.end !== d.start ? '–' + d.end : ''}`, ev))
-      .on('mouseleave', () => ES.tip.hide());
+      .on('mouseleave', () => ES.tip.hide())
+      .style('cursor', 'pointer')
+      .on('click', () => { location.href = ES.href('organisation.html?id=' + encodeURIComponent(ES.localId(d.org))); });
   });
 }
 

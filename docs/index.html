@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Swiss Elites</title>
-  <meta name="description" content="Swiss Elites – Linked Open Data interface to the Swiss elites database (OBELIS, UNIL). Political, economic, administrative and academic elites in Switzerland, 1890–2020.">
+  <title>Linked Elites Suisses</title>
+  <meta name="description" content="Linked Elites Suisses – Linked Open Data interface to the Swiss elites database (OBELIS, UNIL). Political, economic, administrative and academic elites in Switzerland, 1890–2020.">
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="preconnect" href="https://api.fontshare.com">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
@@ -36,14 +36,34 @@
   <section class="section">
     <div class="container">
       <div class="kpis" id="kpis" aria-live="polite">
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.persons"></div><div class="kpi-value" data-k="persons">…</div></div>
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.women"></div><div class="kpi-value" data-k="women">…</div></div>
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.orgs"></div><div class="kpi-value" data-k="orgs">…</div></div>
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.memberships"></div><div class="kpi-value" data-k="memb">…</div></div>
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.education"></div><div class="kpi-value" data-k="edu">…</div></div>
-        <div class="kpi"><div class="kpi-label" data-i18n="kpi.wikidata"></div><div class="kpi-value" data-k="wd">…</div></div>
+        <a class="kpi" href="persons.html" data-nav-q><div class="kpi-label" data-i18n="kpi.persons"></div><div class="kpi-value" data-k="persons">…</div></a>
+        <a class="kpi" href="persons.html?g=gen1" data-nav-q><div class="kpi-label" data-i18n="kpi.women"></div><div class="kpi-value" data-k="women">…</div></a>
+        <a class="kpi" href="organisations.html" data-nav-q><div class="kpi-label" data-i18n="kpi.orgs"></div><div class="kpi-value" data-k="orgs">…</div></a>
+        <a class="kpi" href="organisations.html" data-nav-q><div class="kpi-label" data-i18n="kpi.memberships"></div><div class="kpi-value" data-k="memb">…</div></a>
+        <a class="kpi" href="persons.html?edu=1" data-nav-q><div class="kpi-label" data-i18n="kpi.education"></div><div class="kpi-value" data-k="edu">…</div></a>
+        <a class="kpi" href="persons.html?wd=1" data-nav-q><div class="kpi-label" data-i18n="kpi.wikidata"></div><div class="kpi-value" data-k="wd">…</div></a>
       </div>
+      <p class="click-hint" data-i18n="home.kpiHint"></p>
       <div id="kpiQuery"></div>
+    </div>
+  </section>
+
+  <section class="section" style="padding-top:0">
+    <div class="container">
+      <a class="nl-card" href="https://swiss-elites.dsl.unibe.ch/" target="_blank" rel="noopener">
+        <div class="nl-icon" aria-hidden="true">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M4 5h16v10H9l-5 4z"/><path d="M8 9h8M8 12h5"/></svg>
+        </div>
+        <div class="nl-body">
+          <p class="eyebrow" data-i18n="home.nlEyebrow"></p>
+          <h2 data-i18n="home.nlTitle"></h2>
+          <p data-i18n="home.nlText"></p>
+        </div>
+        <div class="nl-cta">
+          <span class="btn btn-primary"><span data-i18n="home.nlCta"></span> ↗</span>
+          <span class="nl-login"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="5" y="11" width="14" height="10" rx="2"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg> <span data-i18n="home.nlLogin"></span></span>
+        </div>
+      </a>
     </div>
   </section>
 
@@ -122,11 +142,11 @@ function renderYears() {
   const by = d3group(yearsData);
   el.innerHTML = Object.keys(by).sort().map(y => {
     const r = by[y], tot = r.m + r.w + r.u, wp = tot ? r.w / tot * 100 : 0;
-    return `<a class="year-card" href="${ES.href('visualisations.html')}#composition">
-      <div class="y">${y}</div>
-      <div class="n">${ES.fmt(tot)} ${ES.t('common.persons')}</div>
+    return `<div class="year-card">
+      <a class="y" href="${ES.href('persons.html?active=' + y)}">${y}</a>
+      <a class="n" href="${ES.href('persons.html?active=' + y)}">${ES.fmt(tot)} ${ES.t('common.persons')}</a>
       <div class="share-bar" aria-hidden="true"><span class="m" style="width:${100 - wp}%"></span><span class="w" style="width:${wp}%"></span></div>
-      <div class="w-share">${ES.t('home.womenShare', { p: wp.toFixed(1) })}</div></a>`;
+      <a class="w-share" href="${ES.href('persons.html?active=' + y + '&g=gen1')}">${ES.t('home.womenShare', { p: wp.toFixed(1) })} ↗</a></div>`;
   }).join('');
 }
 function d3group(rows) {
@@ -156,6 +176,11 @@ function heroNet() {
 
 ES.init(async () => {
   heroNet();
+  const syncKpi = () => document.querySelectorAll('a[data-nav-q]').forEach(a => {
+    const u = new URL(a.getAttribute('href'), location.href); u.searchParams.set('lang', ES.lang);
+    a.setAttribute('href', u.pathname.split('/').pop() + u.search);
+  });
+  syncKpi(); document.addEventListener('es:lang', syncKpi);
   const lf = document.getElementById('langField');
   lf.value = ES.lang; document.addEventListener('es:lang', () => { lf.value = ES.lang; });
 

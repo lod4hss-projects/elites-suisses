@@ -166,6 +166,29 @@ input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px 
 .kpi-label { text-transform: uppercase; letter-spacing: .1em; font-size: .7rem; font-weight: 650; color: var(--muted); }
 .kpi-value { font-size: 1.9rem; font-weight: 700; color: var(--navy); font-variant-numeric: tabular-nums; }
 
+a.kpi { text-decoration: none; color: inherit; display: block; transition: transform .2s, box-shadow .2s, border-color .2s; }
+a.kpi:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); border-color: var(--navy-3); color: inherit; }
+a.kpi:hover .kpi-value { color: var(--red); }
+
+/* ---------- natural-language card ---------- */
+.nl-card {
+  display: grid; grid-template-columns: auto 1fr auto; gap: 24px; align-items: center;
+  text-decoration: none; color: #fff; border-radius: var(--radius-lg); padding: clamp(22px, 3vw, 34px);
+  background: linear-gradient(120deg, var(--navy) 0%, #2f5878 55%, #3a7f8f 100%);
+  box-shadow: 0 18px 36px rgba(37, 65, 93, .25); position: relative; overflow: hidden;
+  transition: transform .2s, box-shadow .2s;
+}
+.nl-card::after { content: ""; position: absolute; right: -60px; top: -60px; width: 240px; height: 240px; border-radius: 50%; background: radial-gradient(circle, rgba(225,147,210,.35), rgba(225,147,210,0) 70%); pointer-events: none; }
+.nl-card:hover { transform: translateY(-3px); box-shadow: 0 24px 44px rgba(37, 65, 93, .32); color: #fff; }
+.nl-card h2 { color: #fff; margin: 0 0 .4rem; font-size: clamp(1.35rem, 2.2vw, 1.8rem); }
+.nl-card p { margin: 0; color: #d8e6ef; max-width: 62ch; }
+.nl-card .eyebrow { color: var(--sky); margin-bottom: .5rem; }
+.nl-icon { width: 60px; height: 60px; border-radius: 16px; background: rgba(255,255,255,.12); display: grid; place-items: center; color: var(--sky); }
+.nl-cta { display: flex; flex-direction: column; align-items: flex-end; gap: .5rem; position: relative; z-index: 1; }
+.nl-cta .btn-primary { background: #fff; color: var(--navy); border-color: #fff; }
+.nl-login { font-size: .8rem; color: #c6d8e5; display: inline-flex; align-items: center; gap: .3rem; }
+@media (max-width: 760px) { .nl-card { grid-template-columns: 1fr; } .nl-cta { align-items: flex-start; } .nl-icon { display: none; } }
+
 /* ---------- reference year grid ---------- */
 .years { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 12px; }
 .year-card {
@@ -174,6 +197,8 @@ input:focus, select:focus, button:focus-visible, a:focus-visible { outline: 3px 
   transition: transform .2s, box-shadow .2s;
 }
 .year-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-hover); color: inherit; }
+.year-card a { text-decoration: none; display: block; }
+.year-card a:hover { text-decoration: underline; }
 .year-card .y { font-size: 1.35rem; font-weight: 700; color: var(--navy); }
 .year-card .n { font-size: .9rem; color: var(--muted); font-variant-numeric: tabular-nums; }
 .share-bar { height: 6px; border-radius: 999px; background: #e6ebf0; margin-top: .55rem; overflow: hidden; display: flex; }
@@ -244,6 +269,28 @@ details.sparql pre { background: #0f2233; color: #d6e7f2; padding: 1rem; border-
 .viz-nav { display: flex; flex-wrap: wrap; gap: .5rem; margin-top: 1.25rem; }
 .viz-nav a { text-decoration: none; font-size: .88rem; font-weight: 600; border: 1px solid var(--line); background: #fff; padding: .4rem .9rem; border-radius: 999px; color: var(--navy); }
 .viz-nav a:hover { border-color: var(--navy); }
+
+/* ---------- filter chips ---------- */
+.chips { display: flex; flex-wrap: wrap; gap: .5rem; margin: -.25rem 0 1rem; }
+.chips:empty { display: none; }
+.chip {
+  font: inherit; font-size: .85rem; font-weight: 600; cursor: pointer;
+  border: 1px solid var(--navy); background: var(--navy); color: #fff;
+  border-radius: 999px; padding: .3rem .5rem .3rem .85rem; display: inline-flex; gap: .4rem; align-items: center;
+}
+.chip span { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(255,255,255,.2); font-size: .8rem; }
+.chip:hover { background: var(--red); border-color: var(--red); }
+
+/* ---------- clickable chart marks ---------- */
+.chart .clickable { cursor: pointer; }
+.chart rect.clickable:hover, .chart circle.clickable:hover { filter: brightness(1.15); stroke: #1b1b1b; stroke-width: 1; }
+.legend button { font: inherit; font-size: .85rem; color: var(--muted); background: none; border: 1px solid transparent; border-radius: 999px; padding: .15rem .6rem; cursor: pointer; }
+.legend button:hover { border-color: var(--line); color: var(--navy); }
+.legend button[aria-pressed="false"] { opacity: .45; text-decoration: line-through; }
+.legend a { color: var(--muted); text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: .15rem .6rem; }
+.legend a:hover { color: var(--navy); border-color: var(--navy); }
+.click-hint { font-size: .8rem; color: var(--navy-3); margin: .25rem 0 0; }
+.click-hint::before { content: "↗ "; }
 
 /* ---------- tables ---------- */
 .toolbar { display: flex; flex-wrap: wrap; gap: .6rem; align-items: center; margin-bottom: 1rem; }

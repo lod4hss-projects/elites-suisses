@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Persons · Swiss Elites</title>
+  <title>Persons · Linked Elites Suisses</title>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
@@ -27,6 +27,7 @@
           <option value="" data-i18n="persons.gender"></option>
           <option value="gen1" data-i18n="common.women"></option>
           <option value="gen2" data-i18n="common.men"></option>
+          <option value="unknown" data-i18n="common.unknown"></option>
         </select>
         <input type="number" id="from" min="1500" max="2010" style="width:9.5em" data-i18n-attr="placeholder:persons.from;aria-label:persons.from">
         <input type="number" id="to" min="1500" max="2010" style="width:7em" data-i18n-attr="placeholder:persons.to;aria-label:persons.to">
@@ -36,6 +37,7 @@
           <option value="mand" data-i18n="persons.sortMand"></option>
         </select>
       </form>
+      <div class="chips" id="chips" aria-live="polite"></div>
       <div id="results"></div>
       <div class="pager" id="pager"></div>
       <div id="query"></div>
@@ -45,18 +47,68 @@
 <script>
 const PAGE = 25;
 const st = { q: '', g: '', from: '', to: '', sort: 'name', page: 1 };
+/* Filters that come from links (charts, key figures) – shown as removable chips. */
+const EXTRA = {
+  active: /^\d{4}$/, type: /^[1-7]$/, org: /^g\d+$/, born: /^gp\d+$/, disc: /^stu-dis\d+$/,
+  deg: /^stu-tit\d+$/, inst: /^g\d+$/, edu: /^1$/, wd: /^1$/,
+};
+const FORM = ['q', 'g', 'from', 'to', 'sort'];
+Object.keys(EXTRA).forEach(k => st[k] = '');
 
 function whereClause() {
   const w = [`?person a crm:E21 ; sdh-short:P9 ?name .`];
   if (st.q) w.push(`FILTER(CONTAINS(LCASE(STR(?name)), LCASE("${ES.lit(st.q)}")))`);
-  if (st.g) w.push(`?person sdh-slc:P23 es:${st.g} .`);
+  if (st.g === 'unknown') w.push(`FILTER NOT EXISTS { ?person sdh-slc:P23 ?anyGender }`);
+  else if (/^gen\d$/.test(st.g)) w.push(`?person sdh-slc:P23 es:${st.g} .`);
   const yf = /^\d{3,4}$/.test(st.from), yt = /^\d{3,4}$/.test(st.to);
   if (yf || yt) {
     w.push(`?person sdh-short:P2 ?birthF .`);
     if (yf) w.push(`FILTER(?birthF >= ${+st.from})`);
     if (yt) w.push(`FILTER(?birthF <= ${+st.to})`);
   }
+  if (st.active || st.type || st.org) {
+    const c = [`?am sdh-slc:P1 ?person`];
+    if (st.org) c.push(`sdh-slc:P2 es:${st.org}`);
+    else if (st.type) c.push(`sdh-slc:P2 ?amBody`);
+    if (st.active) c.push(`sdh-short:P4 ?amStart`, `sdh-short:P7 ?amEnd`);
+    let inner = c.join(' ; ') + ' .';
+    if (st.type && !st.org) inner += ` ?amBody sdh:P99 es:g-ty${st.type} .`;
+    if (st.active) inner += ` FILTER(?amStart <= ${+st.active} && ?amEnd >= ${+st.active})`;
+    w.push(`FILTER EXISTS { ${inner} }`);
+  }
+  if (st.born) w.push(`FILTER EXISTS { ?bEv crm:P98 ?person ; sdh:P6 es:${st.born} }`);
+  if (st.disc || st.deg || st.inst || st.edu) {
+    const c = [`?edu sdh-sls:P9 ?person`];
+    if (st.disc) c.push(`sdh-sls:P25 es:${st.disc}`);
+    if (st.deg) c.push(`sdh-sls:P10 es:${st.deg}`);
+    if (st.inst) c.push(`sdh-sls:P17 es:${st.inst}`);
+    w.push(`FILTER EXISTS { ${c.join(' ; ')} }`);
+  }
+  if (st.wd) w.push(`FILTER EXISTS { ?person owl:sameAs ?anyWd }`);
   return w.map(l => '  ' + l).join('\n');
+}
+
+/* ---- filter chips ---- */
+const labelCache = {};
+async function labelOf(id) {
+  if (!labelCache[id]) labelCache[id] = ES.sparql(`SELECT ?l WHERE { es:${id} sdh-short:P9 ?l } LIMIT 1`).then(r => r[0]?.l || id).catch(() => id);
+  return labelCache[id];
+}
+async function renderChips() {
+  const el = document.getElementById('chips');
+  const items = [];
+  if (st.active) items.push(['active', ES.t('persons.f.active', { y: st.active })]);
+  if (st.type) items.push(['type', ES.t('type.' + st.type)]);
+  if (st.org) items.push(['org', ES.t('persons.f.org', { o: await labelOf(st.org) })]);
+  if (st.born) items.push(['born', ES.t('persons.f.born', { p: await labelOf(st.born) })]);
+  if (st.disc) items.push(['disc', ES.t('persons.f.disc', { d: await labelOf(st.disc) })]);
+  if (st.deg) items.push(['deg', ES.t('persons.f.deg', { d: await labelOf(st.deg) })]);
+  if (st.inst) items.push(['inst', ES.t('persons.f.inst', { i: await labelOf(st.inst) })]);
+  if (st.edu) items.push(['edu', ES.t('persons.f.edu')]);
+  if (st.wd) items.push(['wd', ES.t('persons.f.wd')]);
+  el.innerHTML = items.map(([k, label]) =>
+    `<button type="button" class="chip" data-k="${k}" title="${ES.t('persons.f.remove')}">${ES.esc(label)} <span aria-hidden="true">×</span></button>`).join('');
+  el.querySelectorAll('.chip').forEach(b => b.onclick = () => { st[b.dataset.k] = ''; st.page = 1; run(); });
 }
 function listQuery() {
   const order = { name: 'ASC(LCASE(STR(?name)))', birth: 'ASC(?birth) ASC(?name)', mand: 'DESC(?mandates) ASC(?name)' }[st.sort];
@@ -104,7 +156,7 @@ function render() {
 
 function syncUrl() {
   const u = new URL(location.href);
-  ['q', 'g', 'from', 'to', 'sort', 'page'].forEach(k => {
+  [...FORM, ...Object.keys(EXTRA), 'page'].forEach(k => {
     const v = st[k];
     if (v && !(k === 'sort' && v === 'name') && !(k === 'page' && v === 1)) u.searchParams.set(k, v); else u.searchParams.delete(k);
   });
@@ -114,6 +166,7 @@ function syncUrl() {
 async function run(recount = true) {
   const id = ++reqId, el = document.getElementById('results');
   syncUrl();
+  renderChips();
   ES.loading(el);
   if (recount) total = null;
   try {
@@ -126,15 +179,16 @@ async function run(recount = true) {
 
 ES.init(() => {
   const p = new URLSearchParams(location.search);
-  ['q', 'g', 'from', 'to', 'sort'].forEach(k => { if (p.get(k)) { st[k] = p.get(k); document.getElementById(k).value = st[k]; } });
+  FORM.forEach(k => { if (p.get(k)) { st[k] = p.get(k); document.getElementById(k).value = st[k]; } });
+  Object.entries(EXTRA).forEach(([k, re]) => { const v = p.get(k); if (v && re.test(v)) st[k] = v; });
   st.page = Math.max(1, parseInt(p.get('page') || '1', 10) || 1);
   const upd = ES.debounce(() => {
-    ['q', 'g', 'from', 'to', 'sort'].forEach(k => st[k] = document.getElementById(k).value.trim());
+    FORM.forEach(k => st[k] = document.getElementById(k).value.trim());
     st.page = 1; run();
   }, 350);
   document.getElementById('filters').addEventListener('input', upd);
   document.getElementById('filters').addEventListener('submit', e => { e.preventDefault(); upd(); });
-  document.addEventListener('es:lang', render);
+  document.addEventListener('es:lang', () => { render(); renderChips(); });
   run();
 });
 </script>

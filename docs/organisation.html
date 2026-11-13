@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Organisation · Swiss Elites</title>
+  <title>Organisation · Linked Elites Suisses</title>
   <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="https://api.fontshare.com/v2/css?f[]=switzer@400,500,600,700&display=swap">
   <link rel="stylesheet" href="assets/css/site.css">
@@ -64,14 +64,15 @@ function drawChart() {
   for (let y = lo; y <= hi; y++) {
     let a = 0, b = 0;
     ms.forEach(m => { if (+m.start <= y && +(m.end || m.start) >= y) { ES.isWoman(m.gender) ? b++ : a++; } });
-    men.push({ x: y, y: a, tip: `${ES.t('common.men')}: ${a}` });
-    women.push({ x: y, y: b, tip: `${ES.t('common.women')}: ${b}` });
+    const u = (g) => ES.href(`persons.html?org=${ID}&active=${y}&g=${g}`);
+    men.push({ x: y, y: a, tip: `${ES.t('common.men')}: ${a} ↗`, href: a ? u('gen2') : null });
+    women.push({ x: y, y: b, tip: `${ES.t('common.women')}: ${b} ↗`, href: b ? u('gen1') : null });
   }
   ES.charts.lines(el, [
     { name: ES.t('common.men'), color: ES.colors.men, points: men },
     { name: ES.t('common.women'), color: ES.colors.women, points: women },
   ], { height: 300 });
-  el.querySelectorAll('circle').forEach(c => c.setAttribute('r', hi - lo > 60 ? 0 : 3));
+  el.querySelectorAll('circle').forEach(c => c.setAttribute('r', hi - lo > 60 ? 2 : 3));
 }
 
 function renderMembers() {
@@ -114,7 +115,7 @@ function render() {
       ${+b.degrees ? `<div class="kpi"><div class="kpi-label">${ES.t('kpi.education')}</div><div class="kpi-value">${ES.fmt(b.degrees)}</div></div>` : ''}
     </div>
     ${note ? `<p class="note" style="margin-bottom:20px">${note}</p>` : ''}
-    <div class="panel"><h2>${ES.t('org.over')}</h2><div class="chart" id="orgChart"></div>
+    <div class="panel"><h2>${ES.t('org.over')}</h2><div class="chart" id="orgChart"></div><p class="click-hint">${ES.t('org.hint')}</p>
       <div class="legend"><span><i style="background:var(--men)"></i>${ES.t('common.men')}</span><span><i style="background:var(--women)"></i>${ES.t('common.women')}</span></div></div>
     <div class="panel"><h2>${ES.t('org.members')}</h2>
       <div class="toolbar"><input class="grow" type="search" id="mfilter" value="${ES.esc(st.filter)}" placeholder="${ES.t('org.filter')}" aria-label="${ES.t('org.filter')}"></div>
