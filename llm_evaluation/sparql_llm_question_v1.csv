@@ -1,0 +1,61 @@
+﻿ID,Natural-language question,Difficulty,SPARQL challenge
+E01,List all individuals with a recorded birth date.,Easy,Basic graph pattern
+E02,How many individuals are documented in the database?,Easy,COUNT DISTINCT
+E03,Which individuals were born in 1950?,Easy,Date filter
+E04,Which individuals died before 2000?,Easy,Date comparison
+E05,How many individuals have a recorded death date?,Easy,COUNT DISTINCT
+E06,Which individuals were born in Bern?,Easy,"Basic relationship, identify entity"
+E07,Which individuals studied at the University of Geneva?,Easy,"Basic relationship, identify entity"
+E08,Which individuals obtained a doctorate?,Easy,"Basic relationship, identify entity"
+E09,How many individuals obtained a university degree?,Easy,COUNT DISTINCT
+E10,Which individuals were members of the Swiss Federal Council?,Easy,"Basic relationship, identify entity"
+E11,Which individuals were born in Geneva?,Easy,"Basic graph pattern, place filter"
+E12,How many individuals have at least,Easy,COUNT DISTINCT
+E13,Which individuals were members of a political party?,Easy,Basic relationship
+E14,Which individuals were members of the Federal Council?,Easy,"Basic relationship, identify entity"
+E15,Which individuals were born between 1900 and 1920?,Easy,Date range
+E16,How many individuals were born after 1950?,Easy,"COUNT, FILTER"
+E17,Which individuals obtained a law degree?,Easy,"Basic relationship, identify entity"
+E18,Which individuals were members of a parliamentary commission?,Easy,Basic relationship
+E19,Who are the parents of Gustave Ador-Perdonnet?,Easy,"Basic relationship, identify entity"
+E20,What are the ten earliest recorded birth dates?,Easy,"ORDER BY, LIMIT"
+M01,How many individuals studied at each university?,Medium,"GROUP BY, COUNT"
+M02,Which individuals studied at more than one university?,Medium,Multiple relationships
+M03,How many individuals obtained each type of academic degree?,Medium,"GROUP BY, COUNT"
+M04,Which individuals obtained a doctorate before 1950?,Medium,"Multi-hop, date filter, identify entity"
+M05,Which individuals studied at the University of Zurich and later were members of the same institution?,Medium,"Multiple relationships, identify entity"
+M06,How many individuals were members of political parties in each decade?,Medium,Temporal grouping
+M07,Which individuals were members of both a political party and an association?,Medium,Multiple conditions
+M08,How many women were members of each university?,Medium,"GROUP BY, COUNT"
+M09,Which individuals were both members of political and economic institutions?,Medium,Multiple conditions
+M10,Which political parties had the highest number of documented members?,Medium,"GROUP BY, ORDER BY"
+M11,Which individuals obtained a law degree and subsequently were members of a political institution?,Medium,"Multi-hop, chronology, identify entity"
+M12,"List all doctoral supervisors, ordered by the number of doctoral students they supervised, from highest to lowest.",Medium,"GROUP BY, COUNT DISTINCT, ORDER BY DESC"
+M13,Which individuals directed more than one doctoral degree?,Medium,"GROUP BY, HAVING"
+M14,What was the average age at death of individuals born between 1900 and 1920?,Medium,"Date calculation, AVG"
+M15,Which individuals have children who were born in a different place from them?,Medium,"self-join, comparison"
+M16,How many individuals were born in each decade between 1900 and 2000?,Medium,Date grouping
+M17,Which universities awarded the most doctorates to documented individuals?,Medium,"Multi-hop, aggregation"
+M18,Which individuals were members of an academic institution before the age of 30?,Medium,Temporal calculation
+M19,Which individuals belonged to at least three different organizations?,Medium,"COUNT DISTINCT, HAVING"
+M20,Which individuals obtained a doctoral degree under the supervision of someone born in the same city as themselves?,Medium,"Multi-hop relationships, place comparison"
+H01,Which individuals were members of a political institution in two different political parties during their careers?,Hard,"Multiple relationships, DISTINCT"
+H02,Which individuals were members of an academic and an economic institution simultaneously?,Hard,Temporal overlap
+H03,Which individuals were members of two different political parties during overlapping periods?,Hard,"Self-join, temporal overlap"
+H04,Which individuals obtained degrees from at least two different universities before being members of their first political institution?,Hard,"Multi-hop, chronology"
+H05,Which individuals were members of three or more different economic institutions during the same decade?,Hard,"Temporal grouping, HAVING"
+H06,Which individuals moved from an academic position to a political position within five years?,Hard,Temporal calculation
+H07,Which individuals were members of the same political party as another individual with whom they shared a university?,Hard,"Self-joins, multi-hop"
+H08,Which individuals were both members of a political and economic institution for at least five overlapping years?,Hard,Interval intersection
+H09,Which individuals were members of at least two different universities during overlapping periods?,Hard,"Self-join, temporal overlap"
+H10,Which individuals obtained a doctorate and subsequently were members in both academic and political institutions?,Hard,"Multi-hop, chronology"
+H11,What is the proportion of individuals who were members of the Federal Council that has at least one of their parents was a member of a political instituton?,Hard,
+H12,"Which individuals were members of a political institution before joining an economic one, and later returned to a political institution?",Hard,Temporal sequencing
+H13,Which individuals were members of an economic institution during the same period in which they were members of the Swiss Federal Assembly?,Hard,"Temporal overlap, multi-hop"
+H14,Which individuals shared both a university and a political party with at least three other individuals?,Hard,"Self-joins, aggregation"
+H15,Which individuals belong to a chain of at least three generations of doctoral supervision (supervisor → student → student)?,Hard,"Multi-level traversal, self-joins, DISTINCT"
+H16,Which individuals supervised the doctoral degree of someone who subsequently became a doctoral supervisor themselves?,Hard,"Recursive-like traversal, multi-hop relationships"
+H17,Which political parties had the highest proportion of members who are also members of Boards of Directors in companies?,Hard,"Nested aggregation, ratio"
+H18,Which individuals have at least one child who obtained a doctorate at the same university where their parent are members of?,Hard,"multi-hop traversal, institution comparison"
+H19,Which universities educated the highest proportion of individuals who subsequently were members of political institutions?,Hard,"Multi-hop, aggregation, ratio"
+H20,"Which individuals, with their gender, obtained a doctoral degree at the University of Fribourg between 1980 and 2000?",Hard,"Multi-hop, Date range"

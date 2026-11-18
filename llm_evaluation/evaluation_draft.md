@@ -1,33 +1,99 @@
-# Draft document for SPARQL-LLM Evaluation
+# Evaluation Methodology for the LESSH SPARQL-LLM 
 
-For evaluating the SPARQL-LLM tool developped for the LESSH project, we need to define what is evaluated and what are the metrics
+## Related Work 
 
-## What to evaluate
+Smeros et al. (2026) distinguish two main approaches to evaluating Knowledge Graph Question Answering (KGQA) systems: 
 
-We need to evaluate the effectivness of the tool for:
-- The pipeline: fixed SPARQL pipeline vs. MCP sgent
-- The LLM size (small, medium and large)
-- The complexity of the query (simple, medium and complec)
+Lexical overlap metrics: Measure textual similarity between generated and reference SPARQL queries. 
 
-The difficult part here is defining what is a small, medium and complex query. Also, how many queries should be tested? And how many times each query should be done?
+Execution-based metrics: Compare the results returned by generated and reference queries. 
 
-Another comparison would be between the SPARQL answer and the natural answer, but as both are based on the same pipeline, evaluating the natural answer tool should be enough?
+The authors use the TREC F1 score, calculated from the result set of the generated query (G) and that of the reference query (T): 
 
-Another element to evaluate is if the number of examples provided help the LLM in providing an appropriate answer.
+F1 Score = 2·|𝑇∩𝐺| / |𝑇|+|𝐺| 
 
-## Metrics
+When multiple variables are projected, the results are flattened before calculating F1. The overall score is the unweighted average of individual question scores (macro-F1). 
 
-To correctly evaluate the different variables of the tools (pipeline, LLM size and complexity of queries), we need to define the evaluation metrics.
+Reference: Smeros, P., et al. (2026). "SPARQL-LLM: Real-time SPARQL query generation from natural language questions." ACM Transactions on the Web, 20(4), 1–21. https://doi.org/10.1145/3847195 
 
-The metrics that could be taken into account would be:
-- The time taken to provide an answer
-- The number of token taken by the LLM to provide an answer
-- The correctness of the answer
+## Evaluation Metrics 
 
-The hardnest part to measure is the correctness of the answer. Should it just be if the output is correct (that the query provides the correct result) or also how precise the query is (for instance if the LLM searches for labels or if it identifies the correct entity)?
+Our system uses LLM-based agents to explore ontologies, retrieve SPARQL examples, execute queries, and iteratively refine them. 
 
-## Evaluation tools
+The evaluation therefore covers four dimensions: 
 
-Ragas?
-- https://www.ragas.io/
-- https://docs.ragas.io/en/stable/
+1. Final outcome 
+2. Agentic process and efficiency 
+3. Reliability 
+
+### Final Outcome 
+
+The distinction between query execution and answer correctness is fundamental: a valid SPARQL query can execute successfully while returning incorrect results.
+
+Moreover, as a semantically accurate query will always provide the same outcome, only exact match of the output will be measured. Precision and Recall could be evaluated at a second moment, to evaluate non-exact matches.
+
+- Mertric 1: Task completion rate. Percentage of questions for which the system produces a final, evaluable answer.
+- Metric 2: Task success rate (exact match). Percentage of questions whose final results exactly match the reference results.
+- Metric 3: Query efficiency. Execution time of the final query compared with the reference query.
+
+Several conventions must be established for comparing results, particularly for multiple projected variables, COUNT and ASK queries, duplicates, and empty results. RDF identifiers should be compared rather than displayed labels. 
+
+Query efficiency will initially be treated as a diagnostic metric, since execution time also depends on endpoint performance and caching.
+
+### Agentic Process and Efficiency
+
+These metrics evaluate how the agents reach their final answer.
+
+- Metric 4: Number of iterations. Number of candidate query generation and refinement cycles.
+- Metric 5: Token consumption. Total input and output tokens across all LLM calls.
+
+A particularly useful comparison will be answer accuracy versus computational cost, to assess whether improvements in accuracy justify additional resources. 
+
+### Robustness and Reliability
+
+Since LLMs may produce different results for identical questions, each question should be evaluated multiple times. 
+
+- Metric 6: Repeated-run success rate. Proportion of independent runs producing the correct answer. 
+- Metric 7: Pass@1. Estimated probability that a single complete agent run succeeds. 
+
+### Ablation Study
+
+Ablation studies evaluate the contribution of individual components by disabling them and comparing performance. 
+
+Potential configurations include the full system, a system without SPARQL examples, one without iterative refinement, and one with restricted ontology exploration. 
+
+These experiments could be introduced after the initial evaluation. 
+
+## Building the Benchmark Dataset 
+
+We propose starting with 20–50 manually validated questions, covering different SPARQL operations and levels of difficulty.
+
+SPARQL complexity and linguistic difficulty are two different concepts. 
+- SPARQL complexity: Number of joins, intermediate relationships, filters, aggregations, and temporal or logical operations. 
+- Linguistic difficulty: Synonyms, implicit relationships, ambiguous formulations, and terminology differing from the ontology. 
+
+This distinction will help identify whether models struggle primarily with interpreting questions or navigating the knowledge graph.
+
+It has been decided to only measure SPARQL Complexity. New questions with different level of Linguistic difficulties could be introduced in a future evaluation.
+
+Each benchmark item should contain:
+
+| Field | Description |
+| --- | --- |
+| Question ID | Unique identifier for the benchmark question |
+| Natural-language question | The question submitted to the system |
+| Reference SPARQL query | Manually validated query that correctly answers the question (gold query) |
+| Expected results | Results obtained by executing the reference query against a fixed version of the knowledge graph |
+| SPARQL difficulty | Classification of the query's structural and logical complexity |
+| SPARQL features | Tags identifying relevant operations, such as FILTER, GROUP BY, OPTIONAL, or temporal comparisons |
+
+SPARQL difficulty taxonomy:
+
+| Difficulty | Example Question | SPARQL Challenge |
+| --- | --- | --- |
+| Easy | List all individuals with a recorded birth date. | Basic graph pattern  |
+| Easy | How many individuals are documented? | COUNT DISTINCT |
+| Medium | Which individuals were members of a political party? | Multi-hop relationships |
+| Medium | How many women were members of each political party? | GROUP BY, COUNT |
+| Hard | Which individuals belonged to two different parties? | Self-joins, DISTINCT |
+| Hard | Which individuals held a political position during the same period as another individual? | Temporal overlap, multi-hop traversal  |
